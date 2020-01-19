@@ -16,12 +16,18 @@ namespace Santase
             while (true)
             {
                 // Раздаване
+                Board board = new Board(1, true);
 
-                //Board
+                board.HandingOutCards(deckOfCards.OneHandingOutCards, opponent, player, 1);
+                Console.Write(string.Format($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}"));
+                Console.WriteLine();
 
                 // Игра
+                Card openTrumpCard = deckOfCards.GetTrumpCard();
 
-            }           
+                Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
+                Check check = new Check();
+            }
         }
     }
 }
