@@ -27,7 +27,79 @@ namespace Santase
 
                 Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
                 Check check = new Check();
+
+                while (board.Turns <= 12)
+                {
+                    //STRATEGIES                                
+                    if (board.ThereAreCardsInTheBase == true)
+                    {
+                        if (opponent.IsFirstPlay == true)
+                        {
+                            if (board.Turns != 1)
+                            {
+
+                            }
+
+                            else
+                            //board.Turns == 1
+                            {
+
+                            }
+
+                            Card cardPlayedByOpponent = check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
+                            Console.WriteLine($"The opponent playing: {cardPlayedByOpponent}");
+                            Card playerAnswerCard = CardPlayedAnswerByPlayer(player.CardsPlayer, openTrumpCard, cardPlayedByOpponent);
+                            Console.WriteLine($"{player.Name} playing: {playerAnswerCard.ToString()}");
+                            check.CheckWinnerTurn(opponent, player, cardPlayedByOpponent, playerAnswerCard, openTrumpCard);
+                        }
+
+                        else
+                        {
+                            //player.IsFirstPlay == true;
+                            if (board.Turns != 1)
+                            {
+
+                            }
+
+                            else
+                            //board.Turns == 1
+                            {
+
+                            }
+                        }
+
+                        deckOfCards.TakeCards(opponent, player, openTrumpCard);
+                    }
+
+                    else
+                    //board.ThereAreCardsInTheBase == false
+                    {
+                        
+                    }
+
+                    board.Turns++;
+                }
             }
+        }
+        
+        static Card CardPlayedAnswerByPlayer(List<Card> cardsPlayer, Card openTrumpCard, Card cardPlayedByOpponent)
+        {
+            Card playerAnswerCard = null;
+            // ERROR - if
+            while (playerAnswerCard == null)
+            {
+                string typeCard = Console.ReadLine();
+                string valueCard = Console.ReadLine();
+                foreach (var oneCard in cardsPlayer)
+                {
+                    if (oneCard.Type == typeCard && oneCard.Value == valueCard)
+                    {
+                        playerAnswerCard = oneCard;
+                    }
+                }
+            }
+
+            return playerAnswerCard;
         }
     }
 }
