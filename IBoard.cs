@@ -10,8 +10,6 @@ namespace Santase
 
         int Turns { get; set; }
 
-        bool ThereAreCardsInTheBase { get; set; }
-
         void HandingOutCards(Action<Player, Player, int> handlingHands, Player opponent, Player player, int count);
     }
 }

@@ -16,7 +16,7 @@ namespace Santase
             while (true)
             {
                 // Раздаване
-                Board board = new Board(1, true);
+                Board board = new Board(1);
 
                 board.HandingOutCards(deckOfCards.OneHandingOutCards, opponent, player, 1);
                 Console.Write(string.Format($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}"));
@@ -30,53 +30,63 @@ namespace Santase
 
                 while (board.Turns <= 12)
                 {
-                    //STRATEGIES                                
-                    if (board.ThereAreCardsInTheBase == true)
+                    //STRATEGIES     
+                    //
+                    if (opponent.IsFirstPlay == true)
                     {
-                        if (opponent.IsFirstPlay == true)
+
+                        if (board.Turns == 1)
                         {
-                            if (board.Turns != 1)
-                            {
+                            // Strategy FirstPlayOpponentFirstTour
+                        }
 
-                            }
+                        else if(board.Turns >= 2 && board.Turns <= 5)
+                        {
 
-                            else
-                            //board.Turns == 1
-                            {
+                        }
 
-                            }
+                        else if (board.Turns == 6)
+                        {
 
-                            Card cardPlayedByOpponent = check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
-                            Console.WriteLine($"The opponent playing: {cardPlayedByOpponent}");
-                            Card playerAnswerCard = CardPlayedAnswerByPlayer(player.CardsPlayer, openTrumpCard, cardPlayedByOpponent);
-                            Console.WriteLine($"{player.Name} playing: {playerAnswerCard.ToString()}");
-                            check.CheckWinnerTurn(opponent, player, cardPlayedByOpponent, playerAnswerCard, openTrumpCard);
                         }
 
                         else
                         {
-                            //player.IsFirstPlay == true;
-                            if (board.Turns != 1)
-                            {
 
-                            }
-
-                            else
-                            //board.Turns == 1
-                            {
-
-                            }
                         }
 
-                        deckOfCards.TakeCards(opponent, player, openTrumpCard);
+                        Card cardPlayedByOpponent = check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
+                        Console.WriteLine($"The opponent playing: {cardPlayedByOpponent}");
+                        Card playerAnswerCard = CardPlayedAnswerByPlayer(player.CardsPlayer, openTrumpCard, cardPlayedByOpponent);
+                        Console.WriteLine($"{player.Name} playing: {playerAnswerCard.ToString()}");
+                        check.CheckWinnerTurn(opponent, player, cardPlayedByOpponent, playerAnswerCard, openTrumpCard);
                     }
 
                     else
-                    //board.ThereAreCardsInTheBase == false
                     {
-                        
+                        //player.IsFirstPlay == true;
+                        if (board.Turns == 1)
+                        {
+
+                        }
+
+                        else if (board.Turns >= 2 && board.Turns <= 5)                        
+                        {
+
+                        }
+
+                        else if (board.Turns == 6)
+                        {
+
+                        }
+
+                        else
+                        {
+
+                        }
                     }
 
+                    deckOfCards.TakeCards(opponent, player, openTrumpCard);                   
                     board.Turns++;
                 }
             }
