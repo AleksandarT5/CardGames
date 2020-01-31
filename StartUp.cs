@@ -42,7 +42,7 @@ namespace Santase
 
                         else if(board.Turns >= 2 && board.Turns <= 5)
                         {
-
+                            // FirstPlayOpponentSecondToFifthTours
                         }
 
                         else if (board.Turns == 6)
@@ -95,7 +95,7 @@ namespace Santase
         static Card CardPlayedAnswerByPlayer(List<Card> cardsPlayer, Card openTrumpCard, Card cardPlayedByOpponent)
         {
             Card playerAnswerCard = null;
-            // ERROR - if
+
             while (playerAnswerCard == null)
             {
                 string typeCard = Console.ReadLine();
@@ -105,6 +105,9 @@ namespace Santase
                     if (oneCard.Type == typeCard && oneCard.Value == valueCard)
                     {
                         playerAnswerCard = oneCard;
+                        cardsPlayer.Remove(playerAnswerCard);
+                        break;
+                        //тест
                     }
                 }
             }

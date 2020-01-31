@@ -7,16 +7,20 @@ namespace Santase
 {
     internal class Check : ICheck
     {
-        public Card CheckForTwenty(Player player, Card openTrumpCard)
+        public Card CheckForTwenty(Player participant, Card openTrumpCard, Player theOtherParticipant)
         {
-            List<Card> cardsK = player.CardsPlayer.Where(a => a.Value == "K").ToList();
+            List<Card> cardsK = participant.CardsPlayer.Where(a => a.Value == "K").ToList();
             for (int numberCardsK = 0; numberCardsK < cardsK.Count; numberCardsK++)
             {
                 Card cardK = cardsK[numberCardsK];
                 Card cardD = new Card(cardK.Type, "D", 3);
-                if (player.CardsPlayer.Contains(cardD))
+                if (participant.CardsPlayer.Contains(cardD))
                 {
-                    player.Points += 20;
+                    participant.Points += 20;
+
+                    //Проверка за 66
+                    CheckPlayerHaveSixtySix(participant, theOtherParticipant);
+
                     return cardK;
                 }
             }
@@ -24,12 +28,18 @@ namespace Santase
             return null;
         }
 
-        public Card CheckForFourty(Player player, Card openTrumpCard)
+        public Card CheckForFourty(Player participant, Card openTrumpCard, Player theOtherParticipant)
         {
-            List<Card> cardsTrump = player.CardsPlayer.Where(a => a.Type == openTrumpCard.Value).ToList();
+            List<Card> cardsTrump = participant.CardsPlayer.Where(a => a.Type == openTrumpCard.Value).ToList();
             if (cardsTrump.Any(a => a.Value == "D") || cardsTrump.Any(a => a.Value == "K"))
             {
-                player.Points += 40;
+                participant.Points += 40;
+                // проверка за 66
+                bool havePlayerSixtySix = CheckPlayerHaveSixtySix(participant, theOtherParticipant);
+                if (havePlayerSixtySix == true)
+                {
+                    //Добавяне на havePlayerSixtySix в Player ???
+                }
                 Card card = cardsTrump.First(a => a.Value == "K");
                 return card;
             }
@@ -118,13 +128,31 @@ namespace Santase
             }
         }
 
-        // DO IT
-        public void CheckPlayerHaveSixtySix(Player player)
+        public bool CheckPlayerHaveSixtySix(Player player, Player theOtherParticipant)
         {
             if (player.Points >= 66)
             {
+                if (theOtherParticipant.Points < 33)
+                {
+                    player.Games += 3;
+                }
 
+                else if (theOtherParticipant.Points >= 33 && theOtherParticipant.Points < 66)
+                {
+                    player.Games += 2;
+                }
+
+                else
+                {
+                    player.Games++;
+                }
+
+                player.Points = 0;
+                theOtherParticipant.Points = 0;
+                return true;
             }
+
+            return false;
         }
 
         private void PlayerWins(Player winner, Card winnerCard, Player lost, Card lostCard)
