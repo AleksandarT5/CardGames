@@ -5,11 +5,9 @@ using System.Text;
 namespace Santase
 {
     abstract class StrategyOpponentFirst
-    {
-        //Check check = new Check();
-        //Check тук
-
-        public abstract Card OpponentPlayFirst(List<Card> opponentCards, Card openTrumpCard);
-
+    {        
+        Check check = new Check();
+        public abstract Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard, 
+            bool havePlayerSixtySixPonts, Check check);
     }
 }

@@ -27,14 +27,16 @@ namespace Santase
 
                 Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
                 Check check = new Check();
+                // Дали check да е тук или в StrategyOpponentFirst ???
 
                 while (board.Turns <= 12)
                 {
-                    //STRATEGIES     
-                    //
+                    Card cardPlayedByOpponent = null;
+
                     if (opponent.IsFirstPlay == true)
                     {
-
+                        bool havePlayerSixtySixPonts = false;
+                        // Заместване на тези If-воте с клас приемащ съответната стратегия
                         if (board.Turns == 1)
                         {
                             // Strategy FirstPlayOpponentFirstTour
@@ -47,7 +49,7 @@ namespace Santase
 
                         else if (board.Turns == 6)
                         {
-
+                            // FirstPlayOpponentSixTour
                         }
 
                         else
@@ -55,7 +57,7 @@ namespace Santase
 
                         }
 
-                        Card cardPlayedByOpponent = check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
+                        //Card cardPlayedByOpponent = check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
                         Console.WriteLine($"The opponent playing: {cardPlayedByOpponent}");
                         Card playerAnswerCard = CardPlayedAnswerByPlayer(player.CardsPlayer, openTrumpCard, cardPlayedByOpponent);
                         Console.WriteLine($"{player.Name} playing: {playerAnswerCard.ToString()}");

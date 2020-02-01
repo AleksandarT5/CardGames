@@ -6,9 +6,8 @@ namespace Santase
 {
     class FirstPlayOpponentFirstTour : StrategyOpponentFirst
     {
-        public override Card OpponentPlayFirst(List<Card> opponentCards, Card openTrumpCard)
+        public override Card OpponentPlayFirst(List<Card> opponentCards, Card openTrumpCard, Check check)
         {
-            Check check = new Check();
             Card opponentCardForPlay = check.CheckForCard(opponentCards, openTrumpCard);
             return opponentCardForPlay;
         }

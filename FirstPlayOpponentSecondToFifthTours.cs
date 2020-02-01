@@ -6,16 +6,14 @@ namespace Santase
 {
     class FirstPlayOpponentSecondToFifthTours : StrategyOpponentFirst
     {
-        public override Card OpponentPlayFirst(List<Card> opponentCards, Card openTrumpCard)
+        public override Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard, 
+            bool havePlayerSixtySixPonts, Check check)
         {
-            Check check = new Check();
-            //40
-            //66
-            //20
-            //66
-            // проверка за 9 коз
-            // проверка ниска карта
-
+            check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard);
+            check.CheckForFourty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
+            check.CheckForTwenty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
+            check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
+            // проверка за приключване на програмата, когато card != null 
 
             return null;
         }

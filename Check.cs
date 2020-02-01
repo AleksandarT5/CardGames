@@ -7,7 +7,18 @@ namespace Santase
 {
     internal class Check : ICheck
     {
-        public Card CheckForTwenty(Player participant, Card openTrumpCard, Player theOtherParticipant)
+        public void CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
+        {
+            Card wantedCard = new Card(openTrumpCard.Value, "9", 0);
+            if (playerCards.Contains(wantedCard))
+            {
+                playerCards.Add(openTrumpCard);
+                openTrumpCard = wantedCard;
+                playerCards.Remove(wantedCard);
+            }
+        }
+
+        public Card CheckForTwenty(Player participant, Card openTrumpCard, Player theOtherParticipant, bool havePlayerSixtySixPonts)
         {
             List<Card> cardsK = participant.CardsPlayer.Where(a => a.Value == "K").ToList();
             for (int numberCardsK = 0; numberCardsK < cardsK.Count; numberCardsK++)
@@ -18,8 +29,11 @@ namespace Santase
                 {
                     participant.Points += 20;
 
-                    //Проверка за 66
-                    CheckPlayerHaveSixtySix(participant, theOtherParticipant);
+                    if (participant.Points >= 66)
+                    {
+                        havePlayerSixtySixPonts = true;
+                        return null;
+                    }
 
                     return cardK;
                 }
@@ -28,22 +42,43 @@ namespace Santase
             return null;
         }
 
-        public Card CheckForFourty(Player participant, Card openTrumpCard, Player theOtherParticipant)
+        public Card CheckForFourty(Player participant, Card openTrumpCard, Player theOtherParticipant, bool havePlayerSixtySixPonts)
         {
             List<Card> cardsTrump = participant.CardsPlayer.Where(a => a.Type == openTrumpCard.Value).ToList();
             if (cardsTrump.Any(a => a.Value == "D") || cardsTrump.Any(a => a.Value == "K"))
             {
                 participant.Points += 40;
-                // проверка за 66
-                bool havePlayerSixtySix = CheckPlayerHaveSixtySix(participant, theOtherParticipant);
-                if (havePlayerSixtySix == true)
+                if (participant.Points >= 66)
                 {
-                    //Добавяне на havePlayerSixtySix в Player ???
+                    havePlayerSixtySixPonts = true;
+                    return null;
                 }
+                
                 Card card = cardsTrump.First(a => a.Value == "K");
                 return card;
             }
             return null;
+        }
+
+        public void CheckWhenPlayerHaveSixtySix(Player winer, Player loser)
+        {            
+                if (loser.Points < 33)
+                {
+                    winer.Games += 3;
+                }
+
+                else if (loser.Points >= 33 && loser.Points < 66)
+                {
+                    winer.Games += 2;
+                }
+
+                else
+                {
+                    winer.Games++;
+                }
+
+                winer.Points = 0;
+                loser.Points = 0;
         }
 
         public Card CheckForCard(List<Card> opponentCards, Card openTrumpCard)
@@ -77,6 +112,8 @@ namespace Santase
         {
             if (opponentCard.Type == playerCard.Type)
             {
+                //opponentCard.Points > playerCard.Points ? PlayerWins(opponent, opponentCard, player, playerCard)
+                //    : PlayerWins(player, playerCard, opponent, opponentCard);
                 if (opponentCard.Points > playerCard.Points)
                 {
                     PlayerWins(opponent, opponentCard, player, playerCard);
@@ -113,53 +150,13 @@ namespace Santase
 
             opponent.CardsPlayer.Remove(opponentCard);
             player.CardsPlayer.Remove(playerCard);
+        }      
 
-
-        }
-
-        public void CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
+        private void PlayerWins(Player winner, Card winnerCard, Player loser, Card loserCard)
         {
-            Card wantedCard = new Card(openTrumpCard.Value, "9", 0);
-            if (playerCards.Contains(wantedCard))
-            {
-                playerCards.Add(openTrumpCard);
-                openTrumpCard = wantedCard;
-                playerCards.Remove(wantedCard);
-            }
-        }
-
-        public bool CheckPlayerHaveSixtySix(Player player, Player theOtherParticipant)
-        {
-            if (player.Points >= 66)
-            {
-                if (theOtherParticipant.Points < 33)
-                {
-                    player.Games += 3;
-                }
-
-                else if (theOtherParticipant.Points >= 33 && theOtherParticipant.Points < 66)
-                {
-                    player.Games += 2;
-                }
-
-                else
-                {
-                    player.Games++;
-                }
-
-                player.Points = 0;
-                theOtherParticipant.Points = 0;
-                return true;
-            }
-
-            return false;
-        }
-
-        private void PlayerWins(Player winner, Card winnerCard, Player lost, Card lostCard)
-        {
-            lost.IsFirstPlay = false;
+            loser.IsFirstPlay = false;
             winner.IsFirstPlay = true;
-            winner.Points += (winnerCard.Points + lostCard.Points);
+            winner.Points += (winnerCard.Points + loserCard.Points);
         }
     }
 }

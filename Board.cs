@@ -13,7 +13,8 @@ namespace Santase
 
         public int Turns { get; set; }
 
-        public void HandingOutCards(Action<Player, Player, int> handlingHands, Player opponent, Player player, int count)
+        public void HandingOutCards(Action<Player, Player, int> handlingHands, Player opponent, 
+            Player player, int count)
         {
             handlingHands.Invoke(opponent, player, count);
         }
