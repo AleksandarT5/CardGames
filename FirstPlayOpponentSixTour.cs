@@ -9,13 +9,21 @@ namespace Santase
         public override Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard, 
             bool havePlayerSixtySixPonts, Check check)
         {
-            // начало на проверката
-            check.CheckForFourty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
-            check.CheckForTwenty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
-            // край
-            check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
+            Card card = null;
+            card = check.CheckForFourty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
+            if (havePlayerSixtySixPonts == true || card != null)
+            {
+                return card;
+            }
 
-            return null;
+            card = check.CheckForTwenty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
+            if (havePlayerSixtySixPonts == true || card != null)
+            {
+                return card;
+            }
+
+            card = check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
+            return card;
         }
     }
 }

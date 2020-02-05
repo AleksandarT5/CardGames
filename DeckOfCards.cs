@@ -12,6 +12,8 @@ namespace Santase
         public List<Card> GameCards { get; set; } = new List<Card>();
         public Card OpenTrumpCard { get; set; }
 
+        public List<Card> PlayedCards { get; set; } = new List<Card>();
+
         public DeckOfCards()
         {
             CreateDeck();
@@ -84,48 +86,37 @@ namespace Santase
 
         public void TakeCards(Player opponent, Player player, Card openTrumpCard)
         {
-            // проверка за == 1
-            if (this.GameCards.Count > 1)
+            if (opponent.IsFirstPlay == true)
             {
-                if (opponent.IsFirstPlay == true)
-                {
-                    TakeCardsFromTheBase(opponent, player, this.GameCards);
-                }
-
-                else
-                {
-                    TakeCardsFromTheBase(player, opponent, this.GameCards);
-                }
+                TakeCardsFromTheBase(opponent, player, this.GameCards, openTrumpCard);
             }
 
             else
             {
-                if (opponent.IsFirstPlay == true)
-                {
-                    TakeLastCardFromTheBase(opponent, player, this.GameCards, openTrumpCard);
-                }
-
-                else
-                {
-                    TakeLastCardFromTheBase(player, opponent, this.GameCards, openTrumpCard);
-                }
+                TakeCardsFromTheBase(player, opponent, this.GameCards, openTrumpCard);
             }
 
         }
 
-        private void TakeCardsFromTheBase(Player winner, Player lost, List<Card> basicCards)
+        private void TakeCardsFromTheBase(Player winner, Player lost, List<Card> basicCards, Card openTrumpCard)
         {
             winner.CardsPlayer.Add(basicCards[basicCards.Count - 1]);
             basicCards.Remove(basicCards[basicCards.Count - 1]);
-            lost.CardsPlayer.Add(basicCards[basicCards.Count - 1]);
-            basicCards.Remove(basicCards[basicCards.Count - 1]);
-        }
+            winner.CardsPlayer = winner.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
+            Console.WriteLine(string.Format($"Winner cards: {string.Join(", ", winner.CardsPlayer)}"));
+            if (basicCards.Count == 0)
+            {
+                lost.CardsPlayer.Add(openTrumpCard);
+            }
 
-        private void TakeLastCardFromTheBase(Player winner, Player lost, List<Card> basicCards, Card openTrumpCard)
-        {
-            winner.CardsPlayer.Add(basicCards[0]);
-            winner.CardsPlayer.Remove(basicCards[0]);
-            lost.CardsPlayer.Add(openTrumpCard);
-        }
+            else
+            {
+                lost.CardsPlayer.Add(basicCards[basicCards.Count - 1]);
+            }
+
+            basicCards.Remove(basicCards[basicCards.Count - 1]);
+            lost.CardsPlayer = lost.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
+            Console.WriteLine(string.Format($"Lose cards: {string.Join(", ", lost.CardsPlayer)}"));
+        }        
     }
 }

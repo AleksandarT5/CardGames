@@ -4,13 +4,11 @@ using System.Text;
 
 namespace Santase
 {
-    class FirstPlayOpponentSecondToFifthTours : StrategyOpponentFirst
+    class FirstPlayOpponentSeventhToTwelfthTours : StrategyOpponentFirst
     {
-        public override Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard,
-            bool havePlayerSixtySixPonts, Check check)
+        public override Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard, bool havePlayerSixtySixPonts, Check check)
         {
             Card card = null;
-            check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard);
             card = check.CheckForFourty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
             if (havePlayerSixtySixPonts == true || card != null)
             {
@@ -23,7 +21,21 @@ namespace Santase
                 return card;
             }
 
+            card = check.CheckForATrump(opponent, openTrumpCard);
+            if (card != null)
+            {
+                return card;
+            }
+            // Проверка за "10" от коза, ако "A" от коза е минала:
+            //card = check.CheckFor10Trump(opponent.CardsPlayer, openTrumpCard, deckOfCards);
+
             card = check.CheckForCard(opponent.CardsPlayer, openTrumpCard);
+            if (card != null)
+            {
+                return card;
+            }
+
+
             return card;
         }
     }

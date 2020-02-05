@@ -29,19 +29,20 @@ namespace Santase
 
                 Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
                 Check check = new Check();
-                // Дали check да е тук или в StrategyOpponentFirst ???
 
                 while (board.Turns <= 12)
                 {
                     Console.WriteLine($"Turn {board.Turns}:");
                     Card cardPlayedByOpponent = null;
 
+                    //
+                    Console.WriteLine(string.Format($"Player cards: {string.Join(", ", player.CardsPlayer)}"));
+                    Console.WriteLine(string.Format($"Opponent cards: {string.Join(", ", opponent.CardsPlayer)}"));
+                    //
+
                     if (opponent.IsFirstPlay == true)
                     {
                         bool havePlayerSixtySixPonts = false;
-
-
-
                         if (board.Turns == 1)
                         {
                             OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst = 
@@ -49,26 +50,46 @@ namespace Santase
                             cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player, 
                                 openTrumpCard,havePlayerSixtySixPonts, check);
 
-                            Console.WriteLine($"The opponent playing: {cardPlayedByOpponent.ToString()}");
+                            //Console.WriteLine($"The opponent playing: {cardPlayedByOpponent.ToString()}");
                             //Console.Write(string.Format($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}"));
                             //Console.WriteLine();
                         }
 
                         else if(board.Turns >= 2 && board.Turns <= 5)
                         {
-                            // FirstPlayOpponentSecondToFifthTours
+                            OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
+                                new OpponentStrategyWhenGameFirst(new FirstPlayOpponentSecondToFifthTours());
+                            cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player,
+                                openTrumpCard, havePlayerSixtySixPonts, check);
+
+                            //Console.WriteLine($"The opponent playing: {cardPlayedByOpponent.ToString()}");
+                            //Console.Write(string.Format($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}"));
+                            //Console.WriteLine();
                         }
 
                         else if (board.Turns == 6)
                         {
-                            // FirstPlayOpponentSixTour
+                            OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
+                                new OpponentStrategyWhenGameFirst(new FirstPlayOpponentSixTour());
+                            cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player,
+                                openTrumpCard, havePlayerSixtySixPonts, check);
+
+                            //Console.WriteLine($"The opponent playing: {cardPlayedByOpponent.ToString()}");
+                            //Console.Write(string.Format($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}"));
+                            //Console.WriteLine();
                         }
 
                         else
                         {
-
+                            OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
+                                new OpponentStrategyWhenGameFirst(new FirstPlayOpponentSeventhToTwelfthTours());
+                            cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player,
+                                openTrumpCard, havePlayerSixtySixPonts, check);
                         }
 
+                        Console.WriteLine($"The opponent playing: {cardPlayedByOpponent.ToString()}");
+                        //Console.Write(string.Format($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}"));
+                        //Console.WriteLine();
                         Card playerAnswerCard = CardPlayedAnswerByPlayer(player.CardsPlayer, openTrumpCard, cardPlayedByOpponent);
                         Console.WriteLine($"{player.Name} playing: {playerAnswerCard.ToString()}");
                         check.CheckWinnerTurn(opponent, player, cardPlayedByOpponent, playerAnswerCard, openTrumpCard);

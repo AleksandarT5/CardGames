@@ -93,18 +93,18 @@ namespace Santase
             return card;
         }
 
-        public Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, Card card, string[] values, int number)
+        public Card CheckCards(List<Card> cards, Card openTrumpCard, Card card, string[] values, int number)
         {
-            if (opponentCardsNoTrumps.Any(a => a.Value == values[number]))
+            if (cards.Any(a => a.Value == values[number]))
             {
-                card = opponentCardsNoTrumps.First(a => a.Value == values[number]);
+                card = cards.First(a => a.Value == values[number]);
                 return card;
             }
 
             else
             {
                 number++;
-                return CheckCards(opponentCardsNoTrumps, openTrumpCard, card, values, number);
+                return CheckCards(cards, openTrumpCard, card, values, number);
             }
         }
 
@@ -157,7 +157,7 @@ namespace Santase
                     PlayerWins(opponent, opponentCard, player, playerCard);
                 }
 
-                else
+                else if (player.IsFirstPlay == true)
                 {
                     PlayerWins(player, playerCard, opponent, opponentCard);
                 }
@@ -173,6 +173,20 @@ namespace Santase
             winner.IsFirstPlay = true;
             winner.Points += (winnerCard.Points + loserCard.Points);
         }
-                
+
+        public Card CheckForATrump(Player player, Card openTrumpCard)
+        {            
+            Card wantedCard = new Card(openTrumpCard.Type, "A", 11);
+            Card card = player.CardsPlayer.Contains(wantedCard) ? wantedCard : null;
+            return card;
+        }
+
+        //public Card CheckFor10Trump(List<Card> playerCards, Card openTrumpCard, DeckOfCards deckOfCards)
+        //{
+        //    Card wantedCard = new Card(openTrumpCard.Type, "10", 10);
+        //    Card card = playerCards.Contains(wantedCard) && deckOfCards.PlayedCards.Contains(
+        //        new Card(openTrumpCard.Type, "A")) ? wantedCard : null;
+        //    return card;
+        //}
     }
 }
