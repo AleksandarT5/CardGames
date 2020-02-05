@@ -14,6 +14,8 @@ namespace Santase
 
         void CheckWhenPlayerHaveSixtySix(Player player, Player theOtherParticipant);
 
+        bool CheckForCloseOfDeckOfCards(Player player, Card openTrumpCard);
+
         Card CheckForCard(List<Card> opponentCards, Card openTrumpCard);
 
         Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, Card card, string[] values, int number);

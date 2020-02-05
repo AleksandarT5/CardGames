@@ -89,7 +89,7 @@ namespace Santase
             List<Card> opponentCardsNoTrumps = opponentCards.Where(a => a.Type != openTrumpCard.Type).ToList();
 
             card = CheckCards(opponentCardsNoTrumps, openTrumpCard, card, values, number);
-            opponentCardsNoTrumps.Remove(card);
+            opponentCards.Remove(card);
             return card;
         }
 
@@ -106,6 +106,21 @@ namespace Santase
                 number++;
                 return CheckCards(opponentCardsNoTrumps, openTrumpCard, card, values, number);
             }
+        }
+
+        public bool CheckForCloseOfDeckOfCards(Player player, Card openTrumpCard)
+        {
+            int pointsOfTheCards = player.CardsPlayer.Sum(a => a.Points);
+            if (pointsOfTheCards + player.Points >= 40 
+                && player.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 3
+                && player.CardsPlayer.Contains(new Card(openTrumpCard.Type, "A")))
+            {
+                //
+                //
+                return true;
+            }
+
+            return false;
         }
 
         public void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card playerCard, Card openTrumpCard)
@@ -158,5 +173,6 @@ namespace Santase
             winner.IsFirstPlay = true;
             winner.Points += (winnerCard.Points + loserCard.Points);
         }
+                
     }
 }
