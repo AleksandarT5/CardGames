@@ -7,7 +7,7 @@ namespace Santase
     class FirstPlayOpponentSixTour : StrategyOpponentFirst
     {
         public override Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard, 
-            bool havePlayerSixtySixPonts, Check check)
+            bool havePlayerSixtySixPonts, Check check, DeckOfCards deckOfCards)
         {
             Card card = null;
             card = check.CheckForFourty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);

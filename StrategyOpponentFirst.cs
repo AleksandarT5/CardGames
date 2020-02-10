@@ -7,6 +7,6 @@ namespace Santase
     abstract class StrategyOpponentFirst
     {        
         public abstract Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard, 
-            bool havePlayerSixtySixPonts, Check check);
+            bool havePlayerSixtySixPonts, Check check, DeckOfCards deckOfCards);
     }
 }

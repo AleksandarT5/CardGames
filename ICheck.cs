@@ -18,12 +18,14 @@ namespace Santase
 
         Card CheckForATrump(Player player, Card openTrumpCard);
 
-        //Card CheckFor10Trump(List<Card> playerCards, Card openTrumpCard, DeckOfCards deckOfCards);
+        Card CheckFor10Trump(List<Card> playerCards, Card openTrumpCard, DeckOfCards deckOfCards);
 
         Card CheckForCard(List<Card> opponentCards, Card openTrumpCard);
 
         Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, Card card, string[] values, int number);
 
         void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card myCard, Card openTrumpCard);
+
+        Card CheckTrump(List<Card> opponentCards, Card openTrumpCard, DeckOfCards deckOfCards);
     }
 }

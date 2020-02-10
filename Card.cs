@@ -16,7 +16,7 @@ namespace Santase
 
         public Card(string type, string value, int points)
             : this(type, value)
-        {
+        {            
             this.Points = points;
         }
 
