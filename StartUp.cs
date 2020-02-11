@@ -28,51 +28,56 @@ namespace Santase
                 // Игра
                 Card openTrumpCard = deckOfCards.GetTrumpCard();
 
-                Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
+                //Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
                 Check check = new Check();
 
                 while (board.Turns <= 12)
                 {
                     Console.WriteLine($"Turn {board.Turns}:");
+                    Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
+                    Console.WriteLine();
                     Card cardPlayedByOpponent = null;
                     Card cardPlayedByPlayer = null;
                     bool havePlayerSixtySixPonts = false;
 
                     if (opponent.IsFirstPlay == true)
                     {
+                        OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst = null;
                         if (board.Turns == 1)
                         {
-                            OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst = 
+                            opponentStrategyWhenGameFirst = 
                                 new OpponentStrategyWhenGameFirst(new FirstPlayOpponentFirstTour());
-                            cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player, 
-                                openTrumpCard,havePlayerSixtySixPonts, check, deckOfCards);                            
                         }
 
                         else if(board.Turns >= 2 && board.Turns <= 5)
                         {
-                            OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
+                            openTrumpCard = check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard);
+                            opponentStrategyWhenGameFirst =
                                 new OpponentStrategyWhenGameFirst(new FirstPlayOpponentSecondToFifthTours());
-                            cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player,
-                                openTrumpCard, havePlayerSixtySixPonts, check, deckOfCards);
                         }
 
                         else if (board.Turns == 6)
                         {
-                            OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
+                            opponentStrategyWhenGameFirst =
                                 new OpponentStrategyWhenGameFirst(new FirstPlayOpponentSixTour());
-                            cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player,
-                                openTrumpCard, havePlayerSixtySixPonts, check, deckOfCards);
                         }
 
                         else
                         {
-                            OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
+                            opponentStrategyWhenGameFirst =
                                 new OpponentStrategyWhenGameFirst(new FirstPlayOpponentSeventhToTwelfthTours());
-                            cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player,
-                                openTrumpCard, havePlayerSixtySixPonts, check, deckOfCards);                            
                         }
 
+                        if (havePlayerSixtySixPonts == true)
+                        {
+                            check.CheckWhenPlayerHaveSixtySix(opponent, player);
+                            break;
+                        }
+
+                        cardPlayedByOpponent = opponentStrategyWhenGameFirst.PlayCard(opponent, player,
+                                openTrumpCard, havePlayerSixtySixPonts, check, deckOfCards);
                         Console.WriteLine($"The opponent playing: {cardPlayedByOpponent.ToString()}");
+
                         cardPlayedByPlayer = board.Turns > 6 ? 
                             CardPlayedAnswerByPlayerNoDeckOfCards(cardPlayedByOpponent, player.CardsPlayer, openTrumpCard) : 
                             CardPlayedAnswerByPlayer(player.CardsPlayer, openTrumpCard, cardPlayedByOpponent);
@@ -82,8 +87,9 @@ namespace Santase
 
                     else
                     //player.IsFirstPlay == true;
-
                     {
+                        Card card40 = null;
+                        Card card20 = null;
                         if (board.Turns == 1)
                         {
                             cardPlayedByPlayer = CardPlayedAnswerByPlayer(player.CardsPlayer, 
@@ -93,10 +99,10 @@ namespace Santase
 
                         else if (board.Turns >= 2 && board.Turns <= 5)                        
                         {
-                            // 9, 40, 20
-                           //var cardAfterCheck = 
-                            check.CheckPayerHaveNineTrump(player.CardsPlayer, openTrumpCard);
-                           //openTrumpCard = cardAfterCheck;
+                            // 9+, 40, 20
+                            openTrumpCard = check.CheckPayerHaveNineTrump(player.CardsPlayer, openTrumpCard);
+                            card40 = check.CheckForFourty(player, openTrumpCard, havePlayerSixtySixPonts);
+                            card20 = check.CheckForTwenty(player, openTrumpCard, havePlayerSixtySixPonts);
                         }
 
                         else if (board.Turns == 6)
@@ -108,13 +114,34 @@ namespace Santase
                         {
                             // 40, 20
                         }
+
+                        if (havePlayerSixtySixPonts == true)
+                        {
+                            check.CheckWhenPlayerHaveSixtySix(player, opponent);
+                            break;
+                        }
                     }
+
                     if (havePlayerSixtySixPonts == true)
                     {
+                        if (opponent.Points >= 66)
+                        {
+                            check.CheckWhenPlayerHaveSixtySix(opponent, player);
+                            break;
+                        }
 
+                        else
+                        {
+                            check.CheckWhenPlayerHaveSixtySix(player, opponent);
+                            break;
+                        }
                     }
 
-                    deckOfCards.TakeCards(opponent, player, openTrumpCard);                   
+                    if (board.Turns < 7)
+                    {
+                        deckOfCards.TakeCards(opponent, player, openTrumpCard);
+                    }
+
                     board.Turns++;
                 }
             }
@@ -122,7 +149,7 @@ namespace Santase
             Console.WriteLine($"{opponent.Name} : {player.Name} - {opponent.Games} : {player.Games}");
         }
 
-        private static Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent, 
+        static Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent, 
             List<Card> cardsPlayer, Card openTrumpCard)
         {
             if (cardsPlayer.Count(a => a.Type == cardPlayedByOpponent.Type) > 0)
@@ -131,28 +158,14 @@ namespace Santase
                 return CardPlayedAnswerByPlayer(cardsForAnswer, openTrumpCard, cardPlayedByOpponent);                 
             }
 
-            else if (cardPlayedByOpponent.Type == openTrumpCard.Type)
-            {
-                if (cardsPlayer.Count(a => a.Type == openTrumpCard.Type) > 0)
-                {
-                    List<Card> cardsForAnswer = cardsPlayer.Where(a => a.Type == openTrumpCard.Type).ToList();
-                    return CardPlayedAnswerByPlayer(cardsForAnswer, openTrumpCard, cardPlayedByOpponent);
-                }
-
-                else
-                {
-                    return CardPlayedAnswerByPlayer(cardsPlayer, openTrumpCard, cardPlayedByOpponent);
-                }
-
-            }
-
-            else
+            else if (cardPlayedByOpponent.Type != openTrumpCard.Type && 
+                cardsPlayer.Count(a => a.Type == openTrumpCard.Type) > 0)
             {
                 List<Card> cardsForAnswer = cardsPlayer.Where(a => a.Type == openTrumpCard.Type).ToList();
-
+                return CardPlayedAnswerByPlayer(cardsForAnswer, openTrumpCard, cardPlayedByOpponent);
             }
 
-            throw new NotImplementedException();
+            return CardPlayedAnswerByPlayer(cardsPlayer, openTrumpCard, cardPlayedByOpponent);
         }
 
         static Card CardPlayedAnswerByPlayer(List<Card> cardsPlayer, Card openTrumpCard, Card cardPlayedByOpponent)

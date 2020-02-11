@@ -10,13 +10,13 @@ namespace Santase
             bool havePlayerSixtySixPonts, Check check, DeckOfCards deckOfCards)
         {
             Card card = null;
-            card = check.CheckForFourty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
+            card = check.CheckForFourty(opponent, openTrumpCard, havePlayerSixtySixPonts);
             if (havePlayerSixtySixPonts == true || card != null)
             {
                 return card;
             }
 
-            card = check.CheckForTwenty(opponent, openTrumpCard, player, havePlayerSixtySixPonts);
+            card = check.CheckForTwenty(opponent, openTrumpCard, havePlayerSixtySixPonts);
             if (havePlayerSixtySixPonts == true || card != null)
             {
                 return card;
