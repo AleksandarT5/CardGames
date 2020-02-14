@@ -8,13 +8,15 @@ namespace Santase
     {
         private string name;
 
-        public Player(string name, List<Card> cardsPlayer, int points, int games, bool isFirstPlay)
+        public Player(string name, List<Card> cardsPlayer, int points, int games, bool isFirstPlay,
+            bool hasClosedTheDeckOfCards)
         {
             this.Name = name;
             this.CardsPlayer = new List<Card>();
             this.Points = 0;
             this.Games = 0;
             this.IsFirstPlay = isFirstPlay;
+            this.HasClosedTheDeckOfCards = hasClosedTheDeckOfCards;
         }
 
         public string Name
@@ -33,5 +35,7 @@ namespace Santase
         public int Games { get; set; }
 
         public bool IsFirstPlay { get; set; }
+
+        public bool HasClosedTheDeckOfCards { get; set; }
     }
 }

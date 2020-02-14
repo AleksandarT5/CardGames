@@ -15,5 +15,7 @@ namespace Santase
         int Games { get; }
 
         bool IsFirstPlay { get; }
+
+        bool HasClosedTheDeckOfCards { get; }
     }
 }

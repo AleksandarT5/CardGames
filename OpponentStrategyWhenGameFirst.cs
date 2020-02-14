@@ -7,17 +7,42 @@ namespace Santase
     class OpponentStrategyWhenGameFirst
     {
         private StrategyOpponentFirst strategyOpponentFirst;
+        
+        private int turns;
 
-        public OpponentStrategyWhenGameFirst(StrategyOpponentFirst strategyOpponentFirst)
+        public OpponentStrategyWhenGameFirst(int turns)
         {
-            this.strategyOpponentFirst = strategyOpponentFirst;
+            this.turns = turns;
+            this.strategyOpponentFirst = Method(turns);
         }
-
-        public Card PlayCard(Player opponent, Player player, Card openTrumpCard,
-            bool havePlayerSixtySixPonts, Check check, DeckOfCards deckOfCards)
+        public StrategyOpponentFirst Method(int turns)
         {
-            return this.strategyOpponentFirst.OpponentPlayFirst(opponent, player, openTrumpCard,
-            havePlayerSixtySixPonts, check, deckOfCards);
+            if (turns == 1)
+            {
+                return new FirstPlayOpponentFirstTour();
+            }
+
+            else if (turns >= 2 && turns <= 5)
+            {
+                return new FirstPlayOpponentSecondToFifthTours();
+            }
+
+            else if (turns == 6)
+            {
+                return new FirstPlayOpponentSixTour();
+            }
+
+            else
+            {
+                return new FirstPlayOpponentSeventhToTwelfthTours();
+            }
+        }
+        
+        public Card PlayCard(Player opponent, Player player, Card openTrumpCard, 
+            Check check, DeckOfCards deckOfCards)
+        {
+            return this.strategyOpponentFirst.OpponentPlayFirst(opponent, player, openTrumpCard, 
+                check, deckOfCards);
         }
     }
 }

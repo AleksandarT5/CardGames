@@ -7,6 +7,7 @@ namespace Santase
 {
     internal class Check : ICheck
     {
+
         public Card CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
         {            
 
@@ -22,8 +23,26 @@ namespace Santase
 
             return openTrumpCard;
         }
-        
-        public Card CheckForTwenty(Player participant, Card openTrumpCard, bool havePlayerSixtySixPonts)
+
+        public Card CheckFor40and20(Player player, Card openTrumpCard)
+        {
+            Card card = null;
+            card = CheckForForty(player, openTrumpCard);
+            if (card != null)
+            {
+                return card;
+            }
+
+            card = CheckForTwenty(player, openTrumpCard);
+            if (card != null)
+            {
+                return card;
+            }
+
+            return null;
+        }
+
+        public Card CheckForTwenty(Player participant, Card openTrumpCard)
         {
             List<Card> cardsK = participant.CardsPlayer.Where(a => a.Value == "K").ToList();
             if (cardsK.Count != 0)
@@ -36,7 +55,6 @@ namespace Santase
                         participant.Points += 20;
                         if (participant.Points >= 66)
                         {
-                            havePlayerSixtySixPonts = true;
                             return null;
                         }
 
@@ -48,19 +66,14 @@ namespace Santase
             return null;
         }
 
-        /// <summary>
-        /// За тест
-        /// </summary>
-        public Card CheckForFourty(Player participant, Card openTrumpCard, bool havePlayerSixtySixPonts)
+        public Card CheckForForty(Player participant, Card openTrumpCard)
         {
             if (participant.CardsPlayer.Exists(a => a.Type == openTrumpCard.Type && a.Value == "K") &&
                 participant.CardsPlayer.Exists(a => a.Type == openTrumpCard.Type && a.Value == "D"))
-            //if (cardsTrump.Any(a => a.Value == "D") && cardsTrump.Any(a => a.Value == "K"))
             {
                 participant.Points += 40;
                 if (participant.Points >= 66)
                 {
-                    havePlayerSixtySixPonts = true;
                     return null;
                 }
                 
@@ -70,30 +83,30 @@ namespace Santase
             return null;
         }
 
-        public void CheckWhenPlayerHaveSixtySix(Player winer, Player loser)
-        {            
+        public void CheckWhenParticipantHaveSixtySix(Player winer, Player loser)
+        {
+            //if loser.HasClosedTheDeckOfCards == true
 
-            // Проверка когато и двамата имат над 66
-                if (loser.Points == 0)
-                {
-                    winer.Games += 3;
-                }
+            if (loser.Points == 0)
+            {
+                winer.Games += 3;
+            }
 
-                else if (loser.Points < 33)
-                {
-                    winer.Games += 2;
-                }
+            else if (loser.Points < 33)
+            {
+                winer.Games += 2;
+            }
 
-                else
-                {
-                    winer.Games++;
-                }
+            else
+            {
+                winer.Games++;
+            }
 
-                winer.Points = 0;
-                loser.Points = 0;
+            winer.Points = 0;
+            loser.Points = 0;
         }
 
-        public Card CheckForCard(List<Card> opponentCards, Card openTrumpCard)
+        public Card CheckForWeakCard(List<Card> opponentCards, Card openTrumpCard)
         {
             var values = new string[] { "9", "J", "D", "K", "A", "10" };
             int number = 0;
@@ -120,27 +133,24 @@ namespace Santase
             }
         }
 
-        public bool CheckForCloseOfDeckOfCards(Player player, Card openTrumpCard)
+        public bool CheckForCloseOfDeckOfCardsFromOpponent(Player participant, Card openTrumpCard)
         {
-            int pointsOfTheCards = player.CardsPlayer.Sum(a => a.Points);
-            if (pointsOfTheCards + player.Points >= 40 
-                && player.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 3
-                && player.CardsPlayer.Contains(new Card(openTrumpCard.Type, "A", 11)))
+            int pointsOfTheCards = participant.CardsPlayer.Sum(a => a.Points);
+            if (pointsOfTheCards + participant.Points >= 40 
+                && participant.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 3
+                && participant.CardsPlayer.Contains(new Card(openTrumpCard.Type, "A", 11)))
             {
-                //
-                //
                 return true;
             }
 
             return false;
         }
 
-        public void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card playerCard, Card openTrumpCard)
+        public void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card playerCard, 
+            Card openTrumpCard, DeckOfCards deckOfCards)
         {
             if (opponentCard.Type == playerCard.Type)
             {
-                //opponentCard.Points > playerCard.Points ? PlayerWins(opponent, opponentCard, player, playerCard)
-                //    : PlayerWins(player, playerCard, opponent, opponentCard);
                 if (opponentCard.Points > playerCard.Points)
                 {
                     PlayerWins(opponent, opponentCard, player, playerCard);
@@ -175,9 +185,11 @@ namespace Santase
                 }
             }
 
-            opponent.CardsPlayer.Remove(opponentCard);
-            player.CardsPlayer.Remove(playerCard);
-        }      
+            deckOfCards.PlayedCards.Add(opponentCard);
+            deckOfCards.PlayedCards.Add(playerCard);
+            //opponent.CardsPlayer.Remove(opponentCard);
+            //player.CardsPlayer.Remove(playerCard);
+        }
 
         private void PlayerWins(Player winner, Card winnerCard, Player loser, Card loserCard)
         {
@@ -185,25 +197,29 @@ namespace Santase
             winner.IsFirstPlay = true;
             winner.Points += (winnerCard.Points + loserCard.Points);
         }
-        
-        //public Card CheckForATrump(Player player, Card openTrumpCard)
-        //{            
-        //    Card wantedCard = new Card(openTrumpCard.Type, "A", 11);
-        //    Card card = player.CardsPlayer.Contains(wantedCard) ? wantedCard : null;
-        //    return card;
-        //}
-               
-        //public Card CheckFor10Trump(List<Card> playerCards, Card openTrumpCard, DeckOfCards deckOfCards)
-        //{
-        //    Card wantedCard = new Card(openTrumpCard.Type, "10", 10);
-        //    Card card = playerCards.Contains(wantedCard) && deckOfCards.PlayedCards.Contains(
-        //        new Card(openTrumpCard.Type, "A", 11)) ? wantedCard : null;
-        //    return card;
-        //}
 
-        public Card CheckTrump(List<Card> opponentCards, Card openTrumpCard, DeckOfCards deckOfCards)
+        public Card CheckForStrongOrWeakCard(string keyWord, List<Card> opponentCards, Card openTrumpCard, DeckOfCards deckOfCards)
         {
-            List<Card> allCardsFromType = AllCardsFromOneType(openTrumpCard.Type);
+            List<Card> allCardsFromType = new List<Card>();
+            if (keyWord == "Trump")
+            {
+                allCardsFromType = AllCardsFromOneType(openTrumpCard.Type, "Trump");
+
+            }
+
+            else if (keyWord == "StrongNoTrump")
+            {
+                //string
+                allCardsFromType = AllCardsFromOneType(openTrumpCard.Type, "StrongNoTrump");
+
+            }
+
+            else if (keyWord == "WeakNoTrump")
+            {
+                allCardsFromType = AllCardsFromOneType(openTrumpCard.Type, "WeakNoTrump");
+
+            }
+
             List<Card> playedCards = deckOfCards.PlayedCards;
             bool IsThereAllTheWantedCardsInPlayedCards = false;
 
@@ -231,9 +247,13 @@ namespace Santase
             return null;
         }
 
-        private List<Card> AllCardsFromOneType(string typeCard)
+        private List<Card> AllCardsFromOneType(string typeCard, string keyWord)
         {
             string[] cardsValues = new string[] { "A", "10", "K", "D", "J", "9" };
+            if (keyWord == "WeakNoTrump")
+            {
+                Array.Reverse(cardsValues);
+            }
             List<Card> allCardsFromType = new List<Card>();
             for (int i = 0; i < cardsValues.Length; i++)
             {
@@ -241,6 +261,6 @@ namespace Santase
             }
 
             return allCardsFromType;
-        }
+        }        
     }
 }

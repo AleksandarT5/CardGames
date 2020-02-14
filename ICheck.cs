@@ -8,24 +8,23 @@ namespace Santase
     {
         Card CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard);
         
-        Card CheckForTwenty(Player player, Card openTrumpCard, bool havePlayerSixtySixPonts);
+        Card CheckForTwenty(Player player, Card openTrumpCard);
 
-        Card CheckForFourty(Player player, Card openTrumpCard, bool havePlayerSixtySixPonts);
+        Card CheckForForty(Player player, Card openTrumpCard);
 
-        void CheckWhenPlayerHaveSixtySix(Player player, Player theOtherParticipant);
+        Card CheckFor40and20(Player player, Card openTrumpCard);
 
-        bool CheckForCloseOfDeckOfCards(Player player, Card openTrumpCard);
+        void CheckWhenParticipantHaveSixtySix(Player player, Player theOtherParticipant);
 
-        //Card CheckForATrump(Player player, Card openTrumpCard);
+        bool CheckForCloseOfDeckOfCardsFromOpponent(Player player, Card openTrumpCard);
 
-        //Card CheckFor10Trump(List<Card> playerCards, Card openTrumpCard, DeckOfCards deckOfCards);
-
-        Card CheckForCard(List<Card> opponentCards, Card openTrumpCard);
+        Card CheckForWeakCard(List<Card> opponentCards, Card openTrumpCard);
 
         Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, Card card, string[] values, int number);
 
-        void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card myCard, Card openTrumpCard);
+        void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card myCard, 
+            Card openTrumpCard, DeckOfCards deckOfCards);
 
-        Card CheckTrump(List<Card> opponentCards, Card openTrumpCard, DeckOfCards deckOfCards);
+        Card CheckForStrongOrWeakCard(string keyWord, List<Card> opponentCards, Card openTrumpCard, DeckOfCards deckOfCards);
     }
 }

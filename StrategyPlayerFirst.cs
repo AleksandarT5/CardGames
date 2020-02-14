@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Santase
 {
-    abstract class StrategyOpponentFirst
-    {        
-        public abstract Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard, 
+    abstract class StrategyPlayerFirst
+    {
+        public abstract Card PlayerPlayFirst(Player player, Player opponent, Card openTrumpCard,
             Check check, DeckOfCards deckOfCards);
     }
 }
