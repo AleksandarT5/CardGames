@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Santase
 {
-    class FirstPlayOpponentSeventhToTwelfthTours : StrategyOpponentFirst
+    class FirstPlayOpponentSeventhToTwelfthTours : OpponentStrategyFirst
     {
         public override Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard, 
             Check check, DeckOfCards deckOfCards)

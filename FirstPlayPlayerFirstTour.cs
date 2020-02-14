@@ -4,12 +4,11 @@ using System.Text;
 
 namespace Santase
 {
-    class FirstPlayPlayerFirstTour : StrategyPlayerFirst
+    class FirstPlayPlayerFirstTour : PlayerStrategyFirst
     {
-        public override Card PlayerPlayFirst(Player player, Player opponent, Card openTrumpCard, 
-            Check check, DeckOfCards deckOfCards)
+        public override Card PlayerPlayFirst(Player player, Card openTrumpCard, Check check)
         {
-            throw new NotImplementedException();
+            return check.DeterminingThePlayerCard(player.CardsPlayer, openTrumpCard);
         }
     }
 }

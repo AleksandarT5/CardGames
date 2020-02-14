@@ -12,7 +12,7 @@ namespace Santase
 
         Card CheckForForty(Player player, Card openTrumpCard);
 
-        Card CheckFor40and20(Player player, Card openTrumpCard);
+        Card CheckFor40and20(Player player, Card openTrumpCard, Card playerCard);
 
         void CheckWhenParticipantHaveSixtySix(Player player, Player theOtherParticipant);
 
@@ -20,11 +20,17 @@ namespace Santase
 
         Card CheckForWeakCard(List<Card> opponentCards, Card openTrumpCard);
 
-        Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, Card card, string[] values, int number);
+        Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, string[] values, int number);
 
         void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card myCard, 
             Card openTrumpCard, DeckOfCards deckOfCards);
 
-        Card CheckForStrongOrWeakCard(string keyWord, List<Card> opponentCards, Card openTrumpCard, DeckOfCards deckOfCards);
+        Card CheckForStrongOrWeakCard(string keyWord, List<Card> opponentCards, Card openTrumpCard, 
+            DeckOfCards deckOfCards);
+
+        Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent, List<Card> cardsPlayer,
+            Card openTrumpCard);
+
+        Card DeterminingThePlayerCard(List<Card> cardsPlayer, Card openTrumpCard);
     }
 }

@@ -6,7 +6,7 @@ namespace Santase
 {
     class OpponentStrategyWhenGameFirst
     {
-        private StrategyOpponentFirst strategyOpponentFirst;
+        private OpponentStrategyFirst strategyOpponentFirst;
         
         private int turns;
 
@@ -15,7 +15,7 @@ namespace Santase
             this.turns = turns;
             this.strategyOpponentFirst = Method(turns);
         }
-        public StrategyOpponentFirst Method(int turns)
+        private OpponentStrategyFirst Method(int turns)
         {
             if (turns == 1)
             {
