@@ -95,7 +95,8 @@ namespace Santase
                         opponent.HasClosedTheDeckOfCards = true;
                         board.Turns = 6;
                     }          
-                    // Същата проверка за Player
+                    // Проверка за Player за затваряне
+                    // ???
 
                     board.Turns++;
                 }

@@ -8,12 +8,12 @@ namespace Santase
     {
         private OpponentStrategyFirst strategyOpponentFirst;
         
-        private int turns;
+        private int turn;
 
-        public OpponentStrategyWhenGameFirst(int turns)
+        public OpponentStrategyWhenGameFirst(int turn)
         {
-            this.turns = turns;
-            this.strategyOpponentFirst = Method(turns);
+            this.turn = turn;
+            this.strategyOpponentFirst = Method(turn);
         }
         private OpponentStrategyFirst Method(int turns)
         {
@@ -24,7 +24,7 @@ namespace Santase
 
             else if (turns >= 2 && turns <= 5)
             {
-                return new FirstPlayOpponentSecondToFifthTours();
+                return new FirstPlayOpponentSecondToFifthTour();
             }
 
             else if (turns == 6)
@@ -34,7 +34,7 @@ namespace Santase
 
             else
             {
-                return new FirstPlayOpponentSeventhToTwelfthTours();
+                return new FirstPlayOpponentSeventhToTwelfthTour();
             }
         }
         

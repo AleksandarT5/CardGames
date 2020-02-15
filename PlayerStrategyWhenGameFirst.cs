@@ -25,10 +25,10 @@ namespace Santase
 
             else if (this.turns >= 2 && this.turns <= 5)
             {
-                return new FirstPlayPlayerSecondToFifthTours();
+                return new FirstPlayPlayerSecondToFifthTour();
             }
 
-            return new FirstPlayPlayerSixToTwelfthTours();
+            return new FirstPlayPlayerSixToTwelfthTour();
         }
 
         public Card PlayCard(Player opponent, Player player, Card openTrumpCard,
