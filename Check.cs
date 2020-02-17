@@ -11,96 +11,72 @@ namespace Santase
         public Card CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
         {            
 
-            if (playerCards.Exists(x => x.Type == openTrumpCard.Type && x.Value == "9"))
+            if (playerCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "9"))
             {
                 playerCards.Add(openTrumpCard);
                 openTrumpCard = new Card(openTrumpCard.Type, "9", 0);
-                Card changedCard = playerCards.SingleOrDefault(a => a.Type == openTrumpCard.Type && a.Value == "9");
+                Card changedCard = playerCards.SingleOrDefault(c => c.Type == openTrumpCard.Type && c.Value == "9");
                 playerCards.Remove(changedCard);
                 Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
                 return openTrumpCard;
             }
 
             return openTrumpCard;
-        }        
-
-        public void CheckFor40and20(Player player, Card openTrumpCard, Card playerCard)
-        // или public VOID CheckFor40and20 - това може би е по-добрия вариант - ТЕСТ !!!!!
-        // при CardK40 == null и/или CardK20 == null --- ТЕСТ !!!!!
-        {
-            //card = CheckForForty(player, openTrumpCard);
-            List<Card> cards = player.CardsPlayer;
-
-            // Дава грешка, сигурно е тук
-            Card cardK40 = CheckForForty(player, openTrumpCard);
-            // Тук също
-            Card cardK20 = CheckForTwenty(player, openTrumpCard);
-
-            //if (cards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "K") &&
-            //    cards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "D"))
-            //if (playerCard.Type == openTrumpCard.Type && (playerCard.Value == "K" || playerCard.Value == "D"))
-            //{
-            //    player.Points += 40;
-            //}
-
-            if (cardK40 != null)
-            {
-                if (cardK40 == playerCard || (playerCard.Type == cardK40.Type && playerCard.Value == "D"))
-                {
-                    player.Points += 40;
-                    //return playerCard;
-                }
-            }
-
-            if (cardK20 != null)
-            {
-                if (cardK20 == playerCard || (playerCard.Type == cardK20.Type && playerCard.Value == "D"))
-                {
-                    player.Points += 20;
-                    //return playerCard;
-                }
-            }          
-            
-            //return playerCard;
         }
 
-        public Card CheckForTwenty(Player participant, Card openTrumpCard)
+        public int CheckFor40and20(Player player, Card openTrumpCard, Card playerCard)
         {
-            List<Card> cardsK = participant.CardsPlayer.Where(a => a.Value == "K").ToList();
-            if (cardsK.Count != 0)
+            Card card = CheckForExtraPoints(player, playerCard);
+            if (card != null)
             {
-                for (int numberCardsK = 0; numberCardsK < cardsK.Count; numberCardsK++)
-                {
-                    Card cardK = cardsK[numberCardsK];
-                    if (participant.CardsPlayer.Exists(x => x.Type == cardK.Type && x.Value == "D"))
-                    {
-                        participant.Points += 20;
-                        if (participant.Points >= 66)
-                        {
-                            return null;
-                        }
+                int extraPoints = card.Type == openTrumpCard.Type ? 40 : 20;
+                return extraPoints;
+            }
 
-                        return cardK;
-                    }
-                }
-            }            
+            return 0;
+        }
+
+        private Card CheckForExtraPoints(Player player, Card playerCard)
+        {
+            List<Card> cards = player.CardsPlayer.Where(c => c.Type == playerCard.Type).ToList();
+            if ((playerCard.Value == "K" || playerCard.Value == "D") 
+                && player.CardsPlayer.Exists(c => c.Value == "K" || c.Value == "D"))
+            {
+                return player.CardsPlayer.Where((c => c.Value == "K" || c.Value == "D")).ToList().First();
+            }
 
             return null;
         }
 
-        public Card CheckForForty(Player participant, Card openTrumpCard)
+        public Card CheckingForTwenty(Player participant, Card openTrumpCard)
         {
-            if (participant.CardsPlayer.Exists(a => a.Type == openTrumpCard.Type && a.Value == "K") &&
-                participant.CardsPlayer.Exists(a => a.Type == openTrumpCard.Type && a.Value == "D"))
+            List<Card> cardsWithValueK = participant.CardsPlayer.Where(c => c.Value == "K").ToList();
+            if (cardsWithValueK.Count > 0)
+            {
+                foreach (var cardK in cardsWithValueK)
+                {
+                    if (participant.CardsPlayer.Exists(c => c.Type == cardK.Type && c.Value == "D"))
+                    {
+                        participant.Points += 20;
+                        return participant.Points >= 66 ? null : cardK;
+                    }
+                }
+            }
+            
+            return null;
+        }
+
+        public Card CheckingForForty(Player participant, Card openTrumpCard)
+        {
+            if (participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type && c.Value == "K") &&
+                participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type && c.Value == "D"))
             {
                 participant.Points += 40;
-                if (participant.Points >= 66)
-                {
-                    return null;
-                }
-
-                return participant.CardsPlayer.First(a => a.Type == openTrumpCard.Type && a.Value == "K");
+                Card card = participant.Points >= 66 ? null
+                    : participant.CardsPlayer.First(c => c.Type == openTrumpCard.Type && c.Value == "K");
+                return card;
             }
+
             return null;
         }
 
@@ -132,21 +108,23 @@ namespace Santase
         
         public Card CheckForStrongTrump(Player opponent, Card openTrumpCard, List<Card> deckOfCardsPlayedCards)
         {
-            List<Card> opponentTrumpCards = opponent.CardsPlayer.Where(a => a.Type == openTrumpCard.Type).ToList();
-            Card wantedCard = opponentTrumpCards.Max(a => a.Points) > deckOfCardsPlayedCards.Max(b => b.Points) ?
-                opponentTrumpCards.OrderByDescending(a => a.Points).First() : null;
+            List<Card> opponentTrumpCards = opponent.CardsPlayer.Where(c => c.Type == openTrumpCard.Type).ToList();
+            Card wantedCard = opponentTrumpCards.Max(c => c.Points) > deckOfCardsPlayedCards.Max(b => b.Points) ?
+                opponentTrumpCards.OrderByDescending(c => c.Points).First() : null;
+            opponent.CardsPlayer.Remove(wantedCard);
             return wantedCard;
         }
 
         public Card StrongNoTrump(Player opponent, Card openTrumpCard, List<Card> deckOfCardsPlayedCards)
         {
-            List<Card> opponentNoTrumpCards = opponent.CardsPlayer.Where(a => a.Type != openTrumpCard.Type)
+            List<Card> opponentNoTrumpCards = opponent.CardsPlayer.Where(c => c.Type != openTrumpCard.Type)
                 .OrderByDescending(b => b.Points).ToList();
             foreach (var card in opponentNoTrumpCards)
             {
-                if (card.Points > deckOfCardsPlayedCards.Where(a => a.Type == card.Type)
+                if (card.Points > deckOfCardsPlayedCards.Where(c => c.Type == card.Type)
                     .OrderByDescending(b => b.Points).First().Points)
                 {
+                    opponent.CardsPlayer.Remove(card);
                     return card;
                 }
             }
@@ -170,9 +148,15 @@ namespace Santase
 
         internal Card CheckForWeakTrump(List<Card> opponentCards, Card openTrumpCard)
         {
-            var values = new string[] { "9", "J", "D", "K", "10", "A" };
             List<Card> opponentTrumpCards = opponentCards.Where(a => a.Type == openTrumpCard.Type).ToList();
-            return CheckCards(opponentTrumpCards, openTrumpCard, values, 0);
+            if (opponentTrumpCards.Count > 0)
+            {
+                Card card = opponentTrumpCards.OrderBy(a => a.Points).First();
+                opponentCards.Remove(card);
+                return card;
+            }
+
+            return null;
         }
 
         public Card CheckCards(List<Card> cards, Card openTrumpCard, string[] values, int number)
@@ -188,7 +172,6 @@ namespace Santase
                 return CheckCards(cards, openTrumpCard, values, number);
             }
         }       
-               
 
         public Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent,
             List<Card> cardsPlayer, Card openTrumpCard)
@@ -196,20 +179,20 @@ namespace Santase
             if (cardsPlayer.Count(a => a.Type == cardPlayedByOpponent.Type) > 0)
             {
                 List<Card> cardsForAnswer = cardsPlayer.Where(a => a.Type == cardPlayedByOpponent.Type).ToList();
-                //return DeterminingThePlayerCard(cardsForAnswer, openTrumpCard);
+                //return DeterminingThePlayerCard(cardsForAnswer);
             }
 
             else if (cardPlayedByOpponent.Type != openTrumpCard.Type &&
                 cardsPlayer.Count(a => a.Type == openTrumpCard.Type) > 0)
             {
                 List<Card> cardsForAnswer = cardsPlayer.Where(a => a.Type == openTrumpCard.Type).ToList();
-                //return DeterminingThePlayerCard(cardsForAnswer, openTrumpCard);
+                //return DeterminingThePlayerCard(cardsForAnswer);
             }
 
-            return DeterminingThePlayerCard(cardsPlayer, openTrumpCard);
+            return DeterminingThePlayerCard(cardsPlayer);
         }
 
-        public Card DeterminingThePlayerCard(List<Card> cardsPlayer, Card openTrumpCard)
+        public Card DeterminingThePlayerCard(List<Card> cardsPlayer)
         {
             Card cardPlayer = null;
 
@@ -236,7 +219,7 @@ namespace Santase
             int pointsOfTheCards = participant.CardsPlayer.Sum(a => a.Points);
             if (pointsOfTheCards + participant.Points >= 40
                 && participant.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 3
-                && participant.CardsPlayer.Contains(new Card(openTrumpCard.Type, "A", 11)))
+                && participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type && c.Value == "A"))
             {
                 return true;
             }

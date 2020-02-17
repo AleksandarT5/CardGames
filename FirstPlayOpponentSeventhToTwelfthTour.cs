@@ -18,7 +18,7 @@ namespace Santase
 
 
             //OK
-            card = check.CheckForForty(opponent, openTrumpCard);
+            card = check.CheckingForForty(opponent, openTrumpCard);
             if (opponent.Points >= 66)
             {
                 return null;
@@ -29,7 +29,7 @@ namespace Santase
                 return card;
             }
             //OK
-            card = check.CheckForForty(opponent, openTrumpCard);
+            card = check.CheckingForTwenty(opponent, openTrumpCard);
             if (opponent.Points >= 66)
             {
                 return null;

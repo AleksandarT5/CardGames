@@ -11,15 +11,15 @@ namespace Santase
             Card openTrumpCard, Check check)
         {
             //Card card = null;
-            if (opponent.CardsPlayer.Count(a => a.Type == playerCard.Type) > 0)
+            if (opponent.CardsPlayer.Count(c => c.Type == playerCard.Type) > 0)
             {
-                return opponent.CardsPlayer.Max(a => a.Points) > playerCard.Points ?
+                return opponent.CardsPlayer.Max(c => c.Points) > playerCard.Points ?
                     opponent.CardsPlayer.OrderByDescending(a => a.Points).First() : 
-                    opponent.CardsPlayer.OrderBy(a => a.Points).First();
+                    opponent.CardsPlayer.OrderBy(c => c.Points).First();
             }
 
-            else if (opponent.CardsPlayer.Count(x => x.Type == playerCard.Type) == 0 &&
-                opponent.CardsPlayer.Count(x => x.Type == playerCard.Type) == 0)
+            else if (opponent.CardsPlayer.Count(c => c.Type == playerCard.Type) == 0 &&
+                opponent.CardsPlayer.Count(c => c.Type == playerCard.Type) == 0)
             {
                 // Връща най-слабата си карта
                 return null;
@@ -27,7 +27,7 @@ namespace Santase
 
             else
             {
-                return opponent.CardsPlayer.OrderByDescending(a => a.Points).First();
+                return opponent.CardsPlayer.OrderByDescending(c => c.Points).First();
             }
         }
     }

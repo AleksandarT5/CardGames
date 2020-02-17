@@ -27,7 +27,7 @@ namespace Santase
 
                 // Игра
                 Card openTrumpCard = deckOfCards.GetTrumpCard();
-
+                
                 Check check = new Check();
 
                 while (board.Turns <= 12)
@@ -53,16 +53,15 @@ namespace Santase
                             break;
                         }
 
-                        Console.WriteLine($"The opponent playing: {cardOnOpponentForThisTurn.ToString()}");
+                        Console.WriteLine($"The {opponent.Name} playing: {cardOnOpponentForThisTurn.ToString()}");
                         cardOnPlayerForThisTurn = board.Turns > 6 ?
                             check.CardPlayedAnswerByPlayerNoDeckOfCards(cardOnOpponentForThisTurn, player.CardsPlayer, openTrumpCard) :
-                            check.DeterminingThePlayerCard(player.CardsPlayer, openTrumpCard);
-                        Console.WriteLine($"{player.Name} playing: {cardOnPlayerForThisTurn.ToString()}");
-                        check.CheckWinnerTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
-                            openTrumpCard, deckOfCards);
+                            check.DeterminingThePlayerCard(player.CardsPlayer);
+                        Console.WriteLine($"{player.Name} playing: {cardOnPlayerForThisTurn.ToString()}");                        
                     }
 
                     else
+                    // player.IsFirstPlay == true
                     {
                         PlayerStrategyWhenGameFirst playerStrategyWhenGameFirst =
                                 new PlayerStrategyWhenGameFirst(board.Turns);
@@ -77,7 +76,15 @@ namespace Santase
 
                         Console.WriteLine($"{player.Name} playing: {cardOnPlayerForThisTurn.ToString()}");
 
+                        OpponentStrategyWhenAnswer opponentStrategyWhenAnswer =
+                            new OpponentStrategyWhenAnswer(board.Turns);
+                        cardOnOpponentForThisTurn = opponentStrategyWhenAnswer.PlayCard(opponent, player,
+                            cardOnPlayerForThisTurn, openTrumpCard, check);
+                        Console.WriteLine($"{opponent.Name} playing: {cardOnOpponentForThisTurn.ToString()}");
                     }
+
+                    check.CheckWinnerTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
+                            openTrumpCard, deckOfCards);
 
                     if (opponent.Points >= 66 || player.Points >= 66)
                     {
@@ -90,7 +97,8 @@ namespace Santase
                         deckOfCards.TakeCards(opponent, player, openTrumpCard);
                     }
 
-                    if (check.CheckForCloseOfDeckOfCardsFromOpponent(opponent, openTrumpCard) == true)
+                    if (check.CheckForCloseOfDeckOfCardsFromOpponent(opponent, openTrumpCard) == true 
+                        && opponent.IsFirstPlay == true)
                     {
                         opponent.HasClosedTheDeckOfCards = true;
                         board.Turns = 6;

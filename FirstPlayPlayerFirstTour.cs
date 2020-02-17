@@ -8,7 +8,7 @@ namespace Santase
     {
         public override Card PlayerPlayFirst(Player player, Card openTrumpCard, Check check)
         {
-            return check.DeterminingThePlayerCard(player.CardsPlayer, openTrumpCard);
+            return check.DeterminingThePlayerCard(player.CardsPlayer);
         }
     }
 }

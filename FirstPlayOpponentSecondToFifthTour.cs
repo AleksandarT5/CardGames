@@ -11,7 +11,7 @@ namespace Santase
         {
             Card card = null;
             openTrumpCard = check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard);
-            card = check.CheckForForty(opponent, openTrumpCard);
+            card = check.CheckingForForty(opponent, openTrumpCard);
             if (opponent.Points >= 66)
             {
                 return null;
@@ -22,7 +22,7 @@ namespace Santase
                 return card;
             }
             
-            card = check.CheckForForty(opponent, openTrumpCard);
+            card = check.CheckingForForty(opponent, openTrumpCard);
             if (opponent.Points >= 66)
             {
                 return null;

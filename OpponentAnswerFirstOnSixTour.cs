@@ -10,57 +10,35 @@ namespace Santase
         public override Card AnswerOnOpponent(Player opponent, Player player, Card playerCard, 
             Card openTrumpCard, Check check)
         {
-            
             Card opponentCard = null;
-            if ((playerCard.Type != openTrumpCard.Type && (playerCard.Value == "10" || playerCard.Value == "A"))
-                && opponent.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) > 0)
+            if (AnswerWithStrongestTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
             {
-                List<Card> opponentTrumpCards = opponent.CardsPlayer.Where(a => a.Type == openTrumpCard.Type).ToList();
-
-                return opponentCard = check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
+                opponentCard = opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
+                    .OrderByDescending(c => c.Points).First();
+                return opponentCard;
             }
 
-            if (playerCard.Type == openTrumpCard.Type)
+            else if (AnswerWithWeakTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
             {
-                // 1.Отговаря със най-слаба неКоз
+                opponentCard = check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
+                return opponentCard;
             }
 
-            else if (playerCard.Type != openTrumpCard.Type)
-            {
-                if (playerCard.Value == "10" || playerCard.Value == "A")
-                {
-                    if (opponent.CardsPlayer.Count(a => a.Value == openTrumpCard.Value) > 0)
-                    {
-                        // 2.Отговаря с най-слабата коз
-                    }
+            return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);            
+        }
 
-                    else
-                    // Няма козове
-                    {
-                        // 3.Отговаря с най-слабата неКоз
-                    }
-                }
+        private bool AnswerWithStrongestTrump(List<Card> cards, Card playerCard, Card openTrumpCard)
+        {
+            // Дава грешка понеже opponentCard == null
+            return playerCard.Type != openTrumpCard.Type && cards.Count(c => c.Type == playerCard.Type) > 0 
+                && cards.Max(c => c.Points) > playerCard.Points;
 
-                else
-                // Играя слаба неКоз
-                {
-                    if (opponent.CardsPlayer.Count(a => a.Type == playerCard.Type) > 0)
-                        // Опонента има карти от същия тип
-                    {
-                        // 4. 
-                    }
+        }
 
-                    else
-                    // Опонента няма карти от същия тип
-                    {
-                        // 5.Отговаря с най-слабата неКоз
-                    }
-                }
-            }
-
-
-
-            return null;
+        private bool AnswerWithWeakTrump(List<Card> cards, Card playerCard, Card openTrumpCard)
+        {
+            return ((playerCard.Type != openTrumpCard.Type && (playerCard.Value == "A"
+                || playerCard.Value == "10"))) && (cards.Count(c => c.Type == openTrumpCard.Type) > 0);
         }
     }
 }

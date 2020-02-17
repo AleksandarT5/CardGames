@@ -8,11 +8,11 @@ namespace Santase
     {
         Card CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard);
         
-        Card CheckForTwenty(Player player, Card openTrumpCard);
+        Card CheckingForTwenty(Player player, Card openTrumpCard);
 
-        Card CheckForForty(Player player, Card openTrumpCard);
+        Card CheckingForForty(Player player, Card openTrumpCard);
 
-        void CheckFor40and20(Player player, Card openTrumpCard, Card playerCard);
+        int CheckFor40and20(Player player, Card openTrumpCard, Card playerCard);
 
         void CheckWhenParticipantHaveSixtySix(Player player, Player theOtherParticipant);
 
@@ -28,6 +28,6 @@ namespace Santase
         Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent, List<Card> cardsPlayer,
             Card openTrumpCard);
 
-        Card DeterminingThePlayerCard(List<Card> cardsPlayer, Card openTrumpCard);
+        Card DeterminingThePlayerCard(List<Card> cardsPlayer);
     }
 }
