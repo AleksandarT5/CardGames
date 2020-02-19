@@ -58,7 +58,7 @@ namespace Santase
                     if (participant.CardsPlayer.Exists(c => c.Type == cardK.Type && c.Value == "D"))
                     {
                         participant.Points += 20;
-                        return participant.Points >= 66 ? null : cardK;
+                        return cardK;
                     }
                 }
             }
@@ -72,9 +72,7 @@ namespace Santase
                 participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type && c.Value == "D"))
             {
                 participant.Points += 40;
-                Card card = participant.Points >= 66 ? null
-                    : participant.CardsPlayer.First(c => c.Type == openTrumpCard.Type && c.Value == "K");
-                return card;
+                return participant.CardsPlayer.First(c => c.Type == openTrumpCard.Type && c.Value == "K");
             }
 
             return null;
@@ -106,25 +104,46 @@ namespace Santase
             loser.Points = 0;
         }
         
-        public Card CheckForStrongTrump(Player opponent, Card openTrumpCard, List<Card> deckOfCardsPlayedCards)
+        public Card CheckForStrongTrump(Player opponent, string type, List<Card> deckOfCardsPlayedCards)
         {
-            List<Card> opponentTrumpCards = opponent.CardsPlayer.Where(c => c.Type == openTrumpCard.Type).ToList();
-            Card wantedCard = opponentTrumpCards.Max(c => c.Points) > deckOfCardsPlayedCards.Max(b => b.Points) ?
+            List<Card> opponentTrumpCards = opponent.CardsPlayer.Where(c => c.Type == type).ToList();
+            List<Card> playedTrumpCards = deckOfCardsPlayedCards.Where(c => c.Type == type).ToList();
+            List<Card> noPlayedCardsFromType = CreateAllCardsFromType(type, playedTrumpCards);
+            Card wantedCard = opponentTrumpCards.Max(c => c.Points) == noPlayedCardsFromType.Max(b => b.Points) ?
                 opponentTrumpCards.OrderByDescending(c => c.Points).First() : null;
-            opponent.CardsPlayer.Remove(wantedCard);
+            //opponent.CardsPlayer.Remove(wantedCard);
             return wantedCard;
+        }
+
+        private List<Card> CreateAllCardsFromType(string type, List<Card> playedTrumpCards)
+        {
+            List<Card> allCardsFromType = new List<Card>();
+            string[] values = new string[] { "9", "J", "D", "K", "10", "A" };
+            for (int i = 0; i < 6; i++)
+            {
+                allCardsFromType.Add(new Card(type, values[i]));
+            }
+
+            return allCardsFromType.Except(playedTrumpCards).ToList();
         }
 
         public Card StrongNoTrump(Player opponent, Card openTrumpCard, List<Card> deckOfCardsPlayedCards)
         {
             List<Card> opponentNoTrumpCards = opponent.CardsPlayer.Where(c => c.Type != openTrumpCard.Type)
                 .OrderByDescending(b => b.Points).ToList();
+            //if (opponentNoTrumpCards.Count > 0 && deckOfCardsPlayedCards.Count > 0)
+            //{
+            //}
+            //foreach (var card in opponent.CardsPlayer)
+            //{
+            //    List<Card> cards = 
+            //}
             foreach (var card in opponentNoTrumpCards)
             {
                 if (card.Points > deckOfCardsPlayedCards.Where(c => c.Type == card.Type)
                     .OrderByDescending(b => b.Points).First().Points)
                 {
-                    opponent.CardsPlayer.Remove(card);
+                    //opponent.CardsPlayer.Remove(card);
                     return card;
                 }
             }
@@ -140,7 +159,7 @@ namespace Santase
             if (opponentCardsNoTrumps.Count > 0)
             {
                 card = CheckCards(opponentCardsNoTrumps, openTrumpCard, values, 0);
-                opponentCards.Remove(card);
+                //opponentCards.Remove(card);
             }
             
             return card;
@@ -152,7 +171,7 @@ namespace Santase
             if (opponentTrumpCards.Count > 0)
             {
                 Card card = opponentTrumpCards.OrderBy(a => a.Points).First();
-                opponentCards.Remove(card);
+                //opponentCards.Remove(card);
                 return card;
             }
 
@@ -205,7 +224,7 @@ namespace Santase
                     if (oneCard.Type == typeCard && oneCard.Value == valueCard)
                     {
                         cardPlayer = oneCard;
-                        cardsPlayer.Remove(cardPlayer);
+                        //cardsPlayer.Remove(cardPlayer);
                         break;
                     }
                 }
@@ -265,7 +284,8 @@ namespace Santase
                     PlayerWins(player, playerCard, opponent, opponentCard);
                 }
             }
-
+            player.CardsPlayer.Remove(playerCard);
+            opponent.CardsPlayer.Remove(opponentCard);
             deckOfCards.PlayedCards.Add(opponentCard);
             deckOfCards.PlayedCards.Add(playerCard);
         }

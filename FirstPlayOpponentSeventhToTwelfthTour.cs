@@ -10,37 +10,24 @@ namespace Santase
             Check check, DeckOfCards deckOfCards)
         {
             Card card = null;
-            // Проверка за 40 +
-            // Проверка за 20 +
             // Проверка за коз +            
             // Проверка за силна не Коз
             // Проверка за слаба не Коз - CheckForCard +
 
 
-            //OK
             card = check.CheckingForForty(opponent, openTrumpCard);
-            if (opponent.Points >= 66)
-            {
-                return null;
-            }
-
             if (card != null)
             {
                 return card;
             }
-            //OK
-            card = check.CheckingForTwenty(opponent, openTrumpCard);
-            if (opponent.Points >= 66)
-            {
-                return null;
-            }
 
+            card = check.CheckingForTwenty(opponent, openTrumpCard);
             if (card != null)
             {
                 return card;
             }
             // Проверка за коз, ако е най-силния останал -- за тест
-            card = check.CheckForStrongTrump(opponent, openTrumpCard, deckOfCards.PlayedCards);
+            card = check.CheckForStrongTrump(opponent, openTrumpCard.Type, deckOfCards.PlayedCards);
             if (card != null)
             {
                 return card;

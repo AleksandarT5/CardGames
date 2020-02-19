@@ -29,7 +29,6 @@ namespace Santase
 
         private bool AnswerWithStrongestTrump(List<Card> cards, Card playerCard, Card openTrumpCard)
         {
-            // Дава грешка понеже opponentCard == null
             return playerCard.Type != openTrumpCard.Type && cards.Count(c => c.Type == playerCard.Type) > 0 
                 && cards.Max(c => c.Points) > playerCard.Points;
 
