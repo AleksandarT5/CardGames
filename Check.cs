@@ -8,17 +8,25 @@ namespace Santase
     internal class Check : ICheck
     {
 
-        public Card CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
-        {            
-
+        public bool CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
+        {
             if (playerCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "9"))
             {
                 playerCards.Add(openTrumpCard);
-                openTrumpCard = new Card(openTrumpCard.Type, "9", 0);
-                Card changedCard = playerCards.SingleOrDefault(c => c.Type == openTrumpCard.Type && c.Value == "9");
+                Card changedCard = playerCards.SingleOrDefault(c => c.Type == openTrumpCard.Type
+                && c.Value == "9");
                 playerCards.Remove(changedCard);
-                Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
-                return openTrumpCard;
+                return true;
+            }
+
+            return false;
+        }
+
+        public Card CheckOpenTrupmCardIsChanged(Card openTrumpCard, bool changedOpenTrumpCard)
+        {
+            if (changedOpenTrumpCard == true)
+            {
+                openTrumpCard.Value = "9";
             }
 
             return openTrumpCard;
@@ -40,9 +48,9 @@ namespace Santase
         {
             List<Card> cards = player.CardsPlayer.Where(c => c.Type == playerCard.Type).ToList();
             if ((playerCard.Value == "K" || playerCard.Value == "D") 
-                && player.CardsPlayer.Exists(c => c.Value == "K" || c.Value == "D"))
+                && cards.Exists(c => c.Value == "K" || c.Value == "D"))
             {
-                return player.CardsPlayer.Where((c => c.Value == "K" || c.Value == "D")).ToList().First();
+                return cards.Where((c => c.Value == "K" || c.Value == "D")).ToList().First();
             }
 
             return null;
@@ -104,6 +112,7 @@ namespace Santase
             loser.Points = 0;
         }
         
+        // Не е точен - играе пръв 10, когато противника има А
         public Card CheckForStrongTrump(Player opponent, string type, List<Card> deckOfCardsPlayedCards)
         {
             List<Card> opponentTrumpCards = opponent.CardsPlayer.Where(c => c.Type == type).ToList();
@@ -111,7 +120,6 @@ namespace Santase
             List<Card> noPlayedCardsFromType = CreateAllCardsFromType(type, playedTrumpCards);
             Card wantedCard = opponentTrumpCards.Max(c => c.Points) == noPlayedCardsFromType.Max(b => b.Points) ?
                 opponentTrumpCards.OrderByDescending(c => c.Points).First() : null;
-            //opponent.CardsPlayer.Remove(wantedCard);
             return wantedCard;
         }
 
@@ -138,12 +146,13 @@ namespace Santase
             //{
             //    List<Card> cards = 
             //}
+
+            // Трябва opponentNoTrumpCards.Count > 0, иначе дава грешка
             foreach (var card in opponentNoTrumpCards)
             {
                 if (card.Points > deckOfCardsPlayedCards.Where(c => c.Type == card.Type)
                     .OrderByDescending(b => b.Points).First().Points)
                 {
-                    //opponent.CardsPlayer.Remove(card);
                     return card;
                 }
             }
@@ -159,7 +168,6 @@ namespace Santase
             if (opponentCardsNoTrumps.Count > 0)
             {
                 card = CheckCards(opponentCardsNoTrumps, openTrumpCard, values, 0);
-                //opponentCards.Remove(card);
             }
             
             return card;
@@ -171,7 +179,6 @@ namespace Santase
             if (opponentTrumpCards.Count > 0)
             {
                 Card card = opponentTrumpCards.OrderBy(a => a.Points).First();
-                //opponentCards.Remove(card);
                 return card;
             }
 
@@ -219,15 +226,19 @@ namespace Santase
             {
                 string typeCard = Console.ReadLine();
                 string valueCard = Console.ReadLine();
-                foreach (var oneCard in cardsPlayer)
+                if (cardsPlayer.Exists(c => c.Type == typeCard && c.Value == valueCard))
                 {
-                    if (oneCard.Type == typeCard && oneCard.Value == valueCard)
-                    {
-                        cardPlayer = oneCard;
-                        //cardsPlayer.Remove(cardPlayer);
-                        break;
-                    }
+                    cardPlayer = cardsPlayer.First(c => c.Type == typeCard && c.Value == valueCard);
+                    return cardPlayer;
                 }
+                //foreach (var oneCard in cardsPlayer)
+                //{
+                //    if (oneCard.Type == typeCard && oneCard.Value == valueCard)
+                //    {
+                //        cardPlayer = oneCard;
+                //        break;
+                //    }
+                //}
             }
 
             return cardPlayer;

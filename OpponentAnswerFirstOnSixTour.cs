@@ -18,6 +18,15 @@ namespace Santase
                 return opponentCard;
             }
 
+            // ?
+            else if ((playerCard.Type != openTrumpCard.Type && playerCard.Value == "10")
+                && opponent.CardsPlayer.Exists(c => c.Type == playerCard.Type && c.Value == "A"))
+            {
+                return opponent.CardsPlayer.Where(c => c.Type == playerCard.Type
+                && c.Value == "A").ToList().First();
+            }
+            //
+
             else if (AnswerWithWeakTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
             {
                 opponentCard = check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);

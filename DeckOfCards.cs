@@ -12,6 +12,12 @@ namespace Santase
         public List<Card> GameCards { get; set; } = new List<Card>();
         public Card OpenTrumpCard { get; set; }
 
+        //
+
+        public bool ChangedOpenTrumpCard { get; set; }
+
+        //
+
         public List<Card> PlayedCards { get; set; } = new List<Card>();
 
         public DeckOfCards()
@@ -61,10 +67,8 @@ namespace Santase
                 OneHandingOutCards(participant, secondParticipant, count);
             }
             participant.CardsPlayer = participant.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
-            //Console.WriteLine(string.Format($"Opponent cards: {string.Join(", ", participant.CardsPlayer)}"));
 
             secondParticipant.CardsPlayer = secondParticipant.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
-            //Console.WriteLine(string.Format($"Player cards: {string.Join(", ", secondParticipant.CardsPlayer)}"));
         }
 
         private void HandingOutCardHand(List<Card> basicDeckOfCards, Player participant)
