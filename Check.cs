@@ -8,18 +8,16 @@ namespace Santase
     internal class Check : ICheck
     {
 
-        public bool CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
+        public void CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
         {
             if (playerCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "9"))
             {
                 playerCards.Add(openTrumpCard);
-                Card changedCard = playerCards.SingleOrDefault(c => c.Type == openTrumpCard.Type
-                && c.Value == "9");
+                Card changedCard = playerCards.Where(c => c.Type == openTrumpCard.Type
+                && c.Value == "9").First();
+                //openTrumpCard = changedCard;
                 playerCards.Remove(changedCard);
-                return true;
             }
-
-            return false;
         }
 
         public Card CheckOpenTrupmCardIsChanged(Card openTrumpCard, bool changedOpenTrumpCard)
@@ -111,16 +109,43 @@ namespace Santase
             winer.Points = 0;
             loser.Points = 0;
         }
-        
-        // Не е точен - играе пръв 10, когато противника има А
-        public Card CheckForStrongTrump(Player opponent, string type, List<Card> deckOfCardsPlayedCards)
+
+        public Card CheckForStrongNoTrumpCard(Player opponent, Card openTrumpCard, List<Card> deckOfCardsPlayedCards)
         {
-            List<Card> opponentTrumpCards = opponent.CardsPlayer.Where(c => c.Type == type).ToList();
-            List<Card> playedTrumpCards = deckOfCardsPlayedCards.Where(c => c.Type == type).ToList();
-            List<Card> noPlayedCardsFromType = CreateAllCardsFromType(type, playedTrumpCards);
-            Card wantedCard = opponentTrumpCards.Max(c => c.Points) == noPlayedCardsFromType.Max(b => b.Points) ?
-                opponentTrumpCards.OrderByDescending(c => c.Points).First() : null;
-            return wantedCard;
+            List<Card> opponentNoTrumpCards = opponent.CardsPlayer.Where(c => c.Type != openTrumpCard.Type)
+                .OrderByDescending(b => b.Points).ToList();
+            if (opponentNoTrumpCards.Count > 0)
+            {
+                foreach (var opponentCard in opponentNoTrumpCards)
+                {
+                    Card checkedCard = CheckForStrongCardFromType(opponent, opponentCard.Type, deckOfCardsPlayedCards);
+                    if (checkedCard != null)
+                    {
+                        return opponentCard;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public Card CheckForStrongCardFromType(Player opponent, string type, List<Card> deckOfCardsPlayedCards)
+        {
+            List<Card> opponentCardsFromType = opponent.CardsPlayer.Where(c => c.Type == type).ToList();
+            List<Card> playedCardsFromType = deckOfCardsPlayedCards.Where(c => c.Type == type).ToList();
+            List<Card> noPlayedCardsFromType = CreateAllCardsFromType(type, playedCardsFromType);
+
+            Console.WriteLine(string.Join("-", opponentCardsFromType));
+            Console.WriteLine(string.Join("-", playedCardsFromType));
+            Console.WriteLine(string.Join("-", noPlayedCardsFromType));
+
+            if (opponentCardsFromType.Count > 0)
+            {
+                return opponentCardsFromType.Max(c => c.Points) == noPlayedCardsFromType.Max(b => b.Points) ?
+                        opponentCardsFromType.OrderByDescending(c => c.Points).First() : null;
+            }
+
+            return null;
         }
 
         private List<Card> CreateAllCardsFromType(string type, List<Card> playedTrumpCards)
@@ -135,26 +160,12 @@ namespace Santase
             return allCardsFromType.Except(playedTrumpCards).ToList();
         }
 
-        public Card StrongNoTrump(Player opponent, Card openTrumpCard, List<Card> deckOfCardsPlayedCards)
+        internal Card CheckForWeakTrump(List<Card> opponentCards, Card openTrumpCard)
         {
-            List<Card> opponentNoTrumpCards = opponent.CardsPlayer.Where(c => c.Type != openTrumpCard.Type)
-                .OrderByDescending(b => b.Points).ToList();
-            //if (opponentNoTrumpCards.Count > 0 && deckOfCardsPlayedCards.Count > 0)
-            //{
-            //}
-            //foreach (var card in opponent.CardsPlayer)
-            //{
-            //    List<Card> cards = 
-            //}
-
-            // Трябва opponentNoTrumpCards.Count > 0, иначе дава грешка
-            foreach (var card in opponentNoTrumpCards)
+            List<Card> opponentTrumpCards = opponentCards.Where(a => a.Type == openTrumpCard.Type).ToList();
+            if (opponentTrumpCards.Count > 0)
             {
-                if (card.Points > deckOfCardsPlayedCards.Where(c => c.Type == card.Type)
-                    .OrderByDescending(b => b.Points).First().Points)
-                {
-                    return card;
-                }
+                return opponentTrumpCards.OrderBy(a => a.Points).First();
             }
 
             return null;
@@ -163,25 +174,13 @@ namespace Santase
         public Card CheckForWeakCard(List<Card> opponentCards, Card openTrumpCard)
         {
             var values = new string[] { "9", "J", "D", "K", "A", "10" };
-            Card card = null;
-            List<Card> opponentCardsNoTrumps = opponentCards.Where(a => a.Type != openTrumpCard.Type).ToList();
+            List<Card> opponentCardsNoTrumps = opponentCards.Where(c => c.Type != openTrumpCard.Type)
+                .OrderBy(c => c.Points).ToList();
             if (opponentCardsNoTrumps.Count > 0)
             {
-                card = CheckCards(opponentCardsNoTrumps, openTrumpCard, values, 0);
+                return CheckCards(opponentCardsNoTrumps, openTrumpCard, values, 0);
             }
             
-            return card;
-        }
-
-        internal Card CheckForWeakTrump(List<Card> opponentCards, Card openTrumpCard)
-        {
-            List<Card> opponentTrumpCards = opponentCards.Where(a => a.Type == openTrumpCard.Type).ToList();
-            if (opponentTrumpCards.Count > 0)
-            {
-                Card card = opponentTrumpCards.OrderBy(a => a.Points).First();
-                return card;
-            }
-
             return null;
         }
 
@@ -205,14 +204,14 @@ namespace Santase
             if (cardsPlayer.Count(a => a.Type == cardPlayedByOpponent.Type) > 0)
             {
                 List<Card> cardsForAnswer = cardsPlayer.Where(a => a.Type == cardPlayedByOpponent.Type).ToList();
-                //return DeterminingThePlayerCard(cardsForAnswer);
+                return DeterminingThePlayerCard(cardsForAnswer);
             }
 
             else if (cardPlayedByOpponent.Type != openTrumpCard.Type &&
                 cardsPlayer.Count(a => a.Type == openTrumpCard.Type) > 0)
             {
                 List<Card> cardsForAnswer = cardsPlayer.Where(a => a.Type == openTrumpCard.Type).ToList();
-                //return DeterminingThePlayerCard(cardsForAnswer);
+                return DeterminingThePlayerCard(cardsForAnswer);
             }
 
             return DeterminingThePlayerCard(cardsPlayer);
@@ -229,16 +228,8 @@ namespace Santase
                 if (cardsPlayer.Exists(c => c.Type == typeCard && c.Value == valueCard))
                 {
                     cardPlayer = cardsPlayer.First(c => c.Type == typeCard && c.Value == valueCard);
-                    return cardPlayer;
+                    //return cardPlayer;
                 }
-                //foreach (var oneCard in cardsPlayer)
-                //{
-                //    if (oneCard.Type == typeCard && oneCard.Value == valueCard)
-                //    {
-                //        cardPlayer = oneCard;
-                //        break;
-                //    }
-                //}
             }
 
             return cardPlayer;

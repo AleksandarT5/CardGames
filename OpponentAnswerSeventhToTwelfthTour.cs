@@ -13,9 +13,11 @@ namespace Santase
             //Card card = null;
             if (opponent.CardsPlayer.Count(c => c.Type == playerCard.Type) > 0)
             {
-                return opponent.CardsPlayer.Max(c => c.Points) > playerCard.Points ?
-                    opponent.CardsPlayer.OrderByDescending(c => c.Points).First() : 
-                    opponent.CardsPlayer.OrderBy(c => c.Points).First();
+                List<Card> sameTypeOfCardsAsPlayerCard = opponent.CardsPlayer
+                    .Where(c => c.Type == playerCard.Type).ToList();
+                return sameTypeOfCardsAsPlayerCard.Max(c => c.Points) > playerCard.Points ?
+                    sameTypeOfCardsAsPlayerCard.OrderByDescending(c => c.Points).First() :
+                    sameTypeOfCardsAsPlayerCard.OrderBy(c => c.Points).First();
             }
 
             else if (opponent.CardsPlayer.Count(c => c.Type == playerCard.Type) == 0 &&

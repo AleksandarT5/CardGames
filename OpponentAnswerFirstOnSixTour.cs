@@ -13,6 +13,8 @@ namespace Santase
             Card opponentCard = null;
             if (AnswerWithStrongestTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
             {
+                //playerCard.Type != openTrumpCard.Type && cards.Count(c => c.Type == playerCard.Type) > 0
+                //&& cards.Max(c => c.Points) > playerCard.Points;
                 opponentCard = opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
                     .OrderByDescending(c => c.Points).First();
                 return opponentCard;
@@ -29,6 +31,8 @@ namespace Santase
 
             else if (AnswerWithWeakTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
             {
+                //((playerCard.Type != openTrumpCard.Type && (playerCard.Value == "A"
+                //|| playerCard.Value == "10"))) && (cards.Count(c => c.Type == openTrumpCard.Type) > 0);
                 opponentCard = check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
                 return opponentCard;
             }

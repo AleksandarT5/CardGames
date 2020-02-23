@@ -7,7 +7,7 @@ namespace Santase
     class StartUp
     {
         static void Main(string[] args)
-        {                      
+        {
             // Пълнене на тестето и разбъркване на картите
             DeckOfCards deckOfCards = new DeckOfCards();
 
@@ -33,21 +33,10 @@ namespace Santase
                 while (board.Turns <= 12)
                 {
                     Console.WriteLine($"Turn {board.Turns}:");
-
-                    //
-
-                    //if (openTrumpCard.Value != "9" && (opponent.CardsPlayer.Contains(openTrumpCard) 
-                    //    || player.CardsPlayer.Contains(openTrumpCard)))
-                    //{
-                    //    openTrumpCard.Value = "9";
-                    //}
-
-                    //
-
                     Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
                     Console.WriteLine();
                     Card cardOnOpponentForThisTurn = null;
-                    Card cardOnPlayerForThisTurn = null;
+                    Card cardOnPlayerForThisTurn = null;                    
 
                     if (opponent.IsFirstPlay == true)
                     {
@@ -57,9 +46,6 @@ namespace Santase
                         cardOnOpponentForThisTurn = opponentStrategyWhenGameFirst.PlayCard(opponent, player,
                                 openTrumpCard, check, deckOfCards);
 
-                        Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
-
-                        // Промяна
                         if (opponent.Points >= 66)
                         {
                             check.CheckWhenParticipantHaveSixtySix(opponent, player);
@@ -81,8 +67,6 @@ namespace Santase
                         cardOnPlayerForThisTurn = playerStrategyWhenGameFirst.PlayCard(opponent, player,
                             openTrumpCard, check, deckOfCards);
 
-                        Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
-
                         if (player.Points >= 66)
                         {
                             check.CheckWhenParticipantHaveSixtySix(player, opponent);
@@ -97,15 +81,13 @@ namespace Santase
                             cardOnPlayerForThisTurn, openTrumpCard, check);
                         Console.WriteLine($"{opponent.Name} playing: {cardOnOpponentForThisTurn.ToString()}");
                     }
-                    Console.WriteLine(deckOfCards.ChangedOpenTrumpCard);
 
-                    if (deckOfCards.ChangedOpenTrumpCard == true)
+
+                    if ((board.Turns >= 2 && board.Turns <= 5) && openTrumpCard.Value != "9" && (opponent
+                        .CardsPlayer.Contains(openTrumpCard) || player.CardsPlayer.Contains(openTrumpCard)))
                     {
                         openTrumpCard.Value = "9";
                     }
-                    //openTrumpCard = check.CheckOpenTrupmCardIsChanged(openTrumpCard, deckOfCards.ChangedOpenTrumpCard);
-
-
 
                     check.CheckWinnerTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
                             openTrumpCard, deckOfCards);
@@ -129,10 +111,21 @@ namespace Santase
                     {
                         opponent.HasClosedTheDeckOfCards = true;
                         board.Turns = 6;
-                    }          
-                    // Проверка за Player за затваряне
-                    // ???
+                    }
 
+                    // Проверка за Player за затваряне
+                    if ((board.Turns >= 1 && board.Turns <= 4) && player.IsFirstPlay == true)
+                    {
+                        Console.Write($"Will the {player.Name} close Deck of Cards(for \"Yes\", write \"Y\"):");
+                        string answer = Console.ReadLine();
+                        if (answer == "Y")
+                        {
+                            player.HasClosedTheDeckOfCards = true;
+                            board.Turns = 6;
+                        }
+                    }
+                    Console.WriteLine(string.Format($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}"));
+                    Console.WriteLine(string.Format($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}"));
                     board.Turns++;
                 }
             }

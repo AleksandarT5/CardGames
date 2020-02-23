@@ -12,12 +12,6 @@ namespace Santase
         public List<Card> GameCards { get; set; } = new List<Card>();
         public Card OpenTrumpCard { get; set; }
 
-        //
-
-        public bool ChangedOpenTrumpCard { get; set; }
-
-        //
-
         public List<Card> PlayedCards { get; set; } = new List<Card>();
 
         public DeckOfCards()
@@ -107,7 +101,7 @@ namespace Santase
             winner.CardsPlayer.Add(basicCards[basicCards.Count - 1]);
             basicCards.Remove(basicCards[basicCards.Count - 1]);
             winner.CardsPlayer = winner.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
-            Console.WriteLine($"{winner.Name} cards: {string.Join(", ", winner.CardsPlayer)}");
+            //Console.WriteLine($"{winner.Name} cards: {string.Join(", ", winner.CardsPlayer)}");
             if (basicCards.Count == 0)
             {
                 lost.CardsPlayer.Add(openTrumpCard);
@@ -119,7 +113,7 @@ namespace Santase
                 basicCards.Remove(basicCards[basicCards.Count - 1]);
             }
             lost.CardsPlayer = lost.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
-            Console.WriteLine(string.Format($"{lost.Name} cards: {string.Join(", ", lost.CardsPlayer)}"));
+            //Console.WriteLine(string.Format($"{lost.Name} cards: {string.Join(", ", lost.CardsPlayer)}"));
         }        
     }
 }
