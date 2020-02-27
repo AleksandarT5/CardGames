@@ -60,9 +60,10 @@ namespace Santase
                 count += 1;
                 OneHandingOutCards(participant, secondParticipant, count);
             }
-            participant.CardsPlayer = participant.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
-
-            secondParticipant.CardsPlayer = secondParticipant.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
+            participant.CardsPlayer = participant.CardsPlayer.OrderBy(t => t.Type)
+                .ThenByDescending(v => v.Value).ToList();
+            secondParticipant.CardsPlayer = secondParticipant.CardsPlayer.OrderBy(t => t.Type)
+                .ThenByDescending(v => v.Value).ToList();
         }
 
         private void HandingOutCardHand(List<Card> basicDeckOfCards, Player participant)
@@ -100,8 +101,8 @@ namespace Santase
         {
             winner.CardsPlayer.Add(basicCards[basicCards.Count - 1]);
             basicCards.Remove(basicCards[basicCards.Count - 1]);
-            winner.CardsPlayer = winner.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
-            //Console.WriteLine($"{winner.Name} cards: {string.Join(", ", winner.CardsPlayer)}");
+            winner.CardsPlayer = winner.CardsPlayer.OrderBy(t => t.Type)
+                .ThenByDescending(v => v.Value).ToList();
             if (basicCards.Count == 0)
             {
                 lost.CardsPlayer.Add(openTrumpCard);
@@ -112,8 +113,17 @@ namespace Santase
                 lost.CardsPlayer.Add(basicCards[basicCards.Count - 1]);
                 basicCards.Remove(basicCards[basicCards.Count - 1]);
             }
+
             lost.CardsPlayer = lost.CardsPlayer.OrderBy(t => t.Type).ThenByDescending(v => v.Value).ToList();
-            //Console.WriteLine(string.Format($"{lost.Name} cards: {string.Join(", ", lost.CardsPlayer)}"));
-        }        
+        } 
+        
+        public void ReturnTheCardsToTheDeck(Player player, Player opponent)
+        {
+            this.GameCards = this.PlayedCards.Concat(player.CardsPlayer).Concat(opponent.CardsPlayer).ToList();
+            FillDeck(this.GameCards);
+            this.PlayedCards.Clear();
+            player.CardsPlayer.Clear();
+            opponent.CardsPlayer.Clear();
+        }
     }
 }

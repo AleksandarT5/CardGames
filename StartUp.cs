@@ -16,6 +16,10 @@ namespace Santase
 
             while (opponent.Games < 11 && player.Games < 11)
             {
+                if (opponent.Games != 0 || player.Games != 0)
+                {
+                    deckOfCards.ReturnTheCardsToTheDeck(player, opponent);
+                }
                 // Раздаване
                 Board board = new Board(1);
 
@@ -60,7 +64,6 @@ namespace Santase
                     }
 
                     else
-                    // player.IsFirstPlay == true
                     {
                         PlayerStrategyWhenGameFirst playerStrategyWhenGameFirst =
                                 new PlayerStrategyWhenGameFirst(board.Turns);
@@ -83,21 +86,21 @@ namespace Santase
                     }
 
 
-                    if ((board.Turns >= 2 && board.Turns <= 5) && openTrumpCard.Value != "9" && (opponent
-                        .CardsPlayer.Contains(openTrumpCard) || player.CardsPlayer.Contains(openTrumpCard)))
-                    {
-                        openTrumpCard.Value = "9";
-                    }
+                    //if ((board.Turns >= 2 && board.Turns <= 5) && openTrumpCard.Value != "9" && (opponent
+                    //    .CardsPlayer.Contains(openTrumpCard) || player.CardsPlayer.Contains(openTrumpCard)))
+                    //{
+                    //    openTrumpCard.Value = "9";
+                    //}
 
                     check.CheckWinnerTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
                             openTrumpCard, deckOfCards);
-                    //
+                    
                     Console.WriteLine($"{player.Name}: {player.Points}");
                     Console.WriteLine($"{opponent.Name}: {opponent.Points}");
-                    //
+                    
                     if (opponent.Points >= 66 || player.Points >= 66)
                     {
-                        CheckFor66(opponent, player, check);
+                        check.CheckFor66(opponent, player);
                         break;
                     }
 
@@ -113,7 +116,9 @@ namespace Santase
                         board.Turns = 6;
                     }
 
-                    // Проверка за Player за затваряне
+                    Console.WriteLine(string.Format($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}"));
+                    Console.WriteLine(string.Format($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}"));
+
                     if ((board.Turns >= 1 && board.Turns <= 4) && player.IsFirstPlay == true)
                     {
                         Console.Write($"Will the {player.Name} close Deck of Cards(for \"Yes\", write \"Y\"):");
@@ -124,26 +129,16 @@ namespace Santase
                             board.Turns = 6;
                         }
                     }
-                    Console.WriteLine(string.Format($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}"));
-                    Console.WriteLine(string.Format($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}"));
+                    
                     board.Turns++;
                 }
+
+                check.CheckAfter12Tour(player, opponent);
             }
 
             Console.WriteLine($"{opponent.Name} : {player.Name} - {opponent.Games} : {player.Games}");
         }
 
-        private static void CheckFor66(Player opponent, Player player, Check check)
-        {
-            if (opponent.Points >= 66)
-            {
-                check.CheckWhenParticipantHaveSixtySix(opponent, player);
-            }
-
-            else if (player.Points >= 66)
-            {
-                check.CheckWhenParticipantHaveSixtySix(player, opponent);
-            }
-        }        
+                
     }
 }

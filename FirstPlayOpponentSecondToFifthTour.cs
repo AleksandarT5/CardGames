@@ -10,7 +10,7 @@ namespace Santase
             Check check, DeckOfCards deckOfCards)
         {
             Card card = null;
-            check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard);
+            //opponent.CardsPlayer = check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard);
             card = check.CheckingForForty(opponent, openTrumpCard);
             if (card != null)
             {

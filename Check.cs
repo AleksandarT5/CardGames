@@ -8,16 +8,17 @@ namespace Santase
     internal class Check : ICheck
     {
 
-        public void CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
+        public List<Card> CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
         {
             if (playerCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "9"))
             {
                 playerCards.Add(openTrumpCard);
                 Card changedCard = playerCards.Where(c => c.Type == openTrumpCard.Type
                 && c.Value == "9").First();
-                //openTrumpCard = changedCard;
                 playerCards.Remove(changedCard);
             }
+
+            return playerCards;
         }
 
         public Card CheckOpenTrupmCardIsChanged(Card openTrumpCard, bool changedOpenTrumpCard)
@@ -45,8 +46,8 @@ namespace Santase
         private Card CheckForExtraPoints(Player player, Card playerCard)
         {
             List<Card> cards = player.CardsPlayer.Where(c => c.Type == playerCard.Type).ToList();
-            if ((playerCard.Value == "K" || playerCard.Value == "D") 
-                && cards.Exists(c => c.Value == "K" || c.Value == "D"))
+            if ((playerCard.Value == "K" && cards.Exists(c => c.Value == "D")) 
+                || (playerCard.Value == "D" && cards.Exists(c => c.Value == "K")))
             {
                 return cards.Where((c => c.Value == "K" || c.Value == "D")).ToList().First();
             }
@@ -83,33 +84,7 @@ namespace Santase
 
             return null;
         }
-
-        public void CheckWhenParticipantHaveSixtySix(Player winer, Player loser)
-        {
-            if (loser.HasClosedTheDeckOfCards == true)
-            {
-                winer.Games += 3;
-            }
-
-            if (loser.Points == 0)
-            {
-                winer.Games += 3;
-            }
-
-            else if (loser.Points < 33)
-            {
-                winer.Games += 2;
-            }
-
-            else
-            {
-                winer.Games++;
-            }
-
-            winer.Points = 0;
-            loser.Points = 0;
-        }
-
+        
         public Card CheckForStrongNoTrumpCard(Player opponent, Card openTrumpCard, List<Card> deckOfCardsPlayedCards)
         {
             List<Card> opponentNoTrumpCards = opponent.CardsPlayer.Where(c => c.Type != openTrumpCard.Type)
@@ -228,7 +203,6 @@ namespace Santase
                 if (cardsPlayer.Exists(c => c.Type == typeCard && c.Value == valueCard))
                 {
                     cardPlayer = cardsPlayer.First(c => c.Type == typeCard && c.Value == valueCard);
-                    //return cardPlayer;
                 }
             }
 
@@ -297,6 +271,68 @@ namespace Santase
             loser.IsFirstPlay = false;
             winner.IsFirstPlay = true;
             winner.Points += (winnerCard.Points + loserCard.Points);
+        }
+
+        public void CheckWhenParticipantHaveSixtySix(Player winer, Player loser)
+        {
+            if (loser.HasClosedTheDeckOfCards == true)
+            {
+                winer.Games += loser.Points == 0 ? 3 : 2;
+            }
+
+            else if (loser.Points == 0)
+            {
+                winer.Games += 3;
+            }
+
+            else if (loser.Points < 33)
+            {
+                winer.Games += 2;
+            }
+
+            else
+            {
+                winer.Games++;
+            }
+
+            winer.Points = 0;
+            loser.Points = 0;
+            winer.IsFirstPlay = true;
+            loser.IsFirstPlay = false;
+            winer.HasClosedTheDeckOfCards = false;
+            loser.HasClosedTheDeckOfCards = false;
+        }
+
+        public void CheckFor66(Player opponent, Player player)
+        {
+            if (opponent.Points >= 66)
+            {
+                CheckWhenParticipantHaveSixtySix(opponent, player);
+            }
+
+            else if (player.Points >= 66)
+            {
+                CheckWhenParticipantHaveSixtySix(player, opponent);
+            }
+        }
+
+        public void CheckAfter12Tour(Player player, Player opponent)
+        {
+            if (player.HasClosedTheDeckOfCards == true)
+            {
+                CheckWhenParticipantHaveSixtySix(opponent, player);
+            }
+
+            else if (opponent.HasClosedTheDeckOfCards == true)
+            {
+                CheckWhenParticipantHaveSixtySix(player, opponent);
+            }
+
+            else
+            {
+                player.Points = 0;
+                opponent.Points = 0;
+            }
         }
     }
 }
