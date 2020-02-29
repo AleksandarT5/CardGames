@@ -14,7 +14,7 @@ namespace Santase
 
         int CheckFor40and20(Player player, Card openTrumpCard, Card playerCard);
 
-        void CheckWhenParticipantHaveSixtySix(Player player, Player theOtherParticipant);
+        void CalculationsWhenParticipantHaveSixtySix(Player player, Player theOtherParticipant);
 
         bool CheckForCloseOfDeckOfCardsFromOpponent(Player player, Card openTrumpCard);
 

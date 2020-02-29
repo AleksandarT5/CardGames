@@ -119,7 +119,9 @@ namespace Santase
         
         public void ReturnTheCardsToTheDeck(Player player, Player opponent)
         {
-            this.GameCards = this.PlayedCards.Concat(player.CardsPlayer).Concat(opponent.CardsPlayer).ToList();
+            this.GameCards = this.GameCards.Concat(this.PlayedCards).Concat(player.CardsPlayer)
+                .Concat(opponent.CardsPlayer).ToList();
+            this.GameCards.Add(this.OpenTrumpCard);
             FillDeck(this.GameCards);
             this.PlayedCards.Clear();
             player.CardsPlayer.Clear();

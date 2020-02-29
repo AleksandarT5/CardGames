@@ -10,31 +10,30 @@ namespace Santase
         public override Card AnswerOnOpponent(Player opponent, Player player, Card playerCard, 
             Card openTrumpCard, Check check)
         {
-            Card opponentCard = null;
-            if (AnswerWithStrongestTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
+            //
+            if (playerCard.Type != openTrumpCard.Type)
             {
-                //playerCard.Type != openTrumpCard.Type && cards.Count(c => c.Type == playerCard.Type) > 0
-                //&& cards.Max(c => c.Points) > playerCard.Points;
-                opponentCard = opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
-                    .OrderByDescending(c => c.Points).First();
-                return opponentCard;
-            }
-
-            // ?
-            else if ((playerCard.Type != openTrumpCard.Type && playerCard.Value == "10")
-                && opponent.CardsPlayer.Exists(c => c.Type == playerCard.Type && c.Value == "A"))
-            {
-                return opponent.CardsPlayer.Where(c => c.Type == playerCard.Type
-                && c.Value == "A").ToList().First();
+                if ((playerCard.Value != "10" || playerCard.Value != "A") 
+                    && opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
+                    .OrderBy(c => c.Points).Last().Points < playerCard.Points)
+                {
+                    return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+                }
             }
             //
+            if (AnswerWithStrongestTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
+                //playerCard.Type != openTrumpCard.Type && cards.Count(c => c.Type == playerCard.Type) > 0
+                //&& cards.Max(c => c.Points) > playerCard.Points;
+            {
+                return opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
+                    .OrderByDescending(c => c.Points).First();
+            }
 
             else if (AnswerWithWeakTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
-            {
                 //((playerCard.Type != openTrumpCard.Type && (playerCard.Value == "A"
                 //|| playerCard.Value == "10"))) && (cards.Count(c => c.Type == openTrumpCard.Type) > 0);
-                opponentCard = check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
-                return opponentCard;
+            {
+                return check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
             }
 
             return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);            
