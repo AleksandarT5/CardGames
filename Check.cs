@@ -12,9 +12,10 @@ namespace Santase
             if (turns >= 2 && turns <= 5)
             {
                 participantCards = NineTrump(participantCards, openTrumpCard);
-                openTrumpCard.Value = "9";
-                Console.WriteLine($"Cards: {string.Join(", ", participantCards)}");
-                Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
+                if (participantCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == openTrumpCard.Value))
+                {
+                    openTrumpCard.Value = "9";
+                }
             }
         }
         public int CheckForCloseDeckOfCards(Player opponent, Player player, Card openTrumpCard, int turns)
@@ -60,29 +61,29 @@ namespace Santase
 
         public List<Card> NineTrump(List<Card> playerCards, Card openTrumpCard)
         {
+            // Не сменя картата в крайния списък с карти
             if (playerCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "9"))
             {
                 string openTrumpCardValue = openTrumpCard.Value;
-                playerCards.Add(new Card(openTrumpCard.Type, openTrumpCardValue));
-                Card changedCard = playerCards.Where(c => c.Type == openTrumpCard.Type
-                && c.Value == "9").First();
-                //openTrumpCard = changedCard;
-                playerCards.Remove(changedCard);
+                playerCards.Add(new Card(openTrumpCard.Type, openTrumpCardValue, openTrumpCard.Points));
+                //playerCards.Add(openTrumpCard);
+                Card wantedCard = playerCards.Where(c => c.Type == openTrumpCard.Type && c.Value == "9").First();
+                playerCards.Remove(wantedCard);
                 return playerCards;
             }
 
             return playerCards;
         }
 
-        public Card CheckOpenTrupmCardIsChanged(Card openTrumpCard, bool changedOpenTrumpCard)
-        {
-            if (changedOpenTrumpCard == true)
-            {
-                openTrumpCard.Value = "9";
-            }
+        //public Card CheckOpenTrupmCardIsChanged(Card openTrumpCard, bool changedOpenTrumpCard)
+        //{
+        //    if (changedOpenTrumpCard == true)
+        //    {
+        //        openTrumpCard = new Card(openTrumpCard.Type, "9");
+        //    }
 
-            return openTrumpCard;
-        }
+        //    return openTrumpCard;
+        //}
 
         public int CheckFor40and20(Player player, Card openTrumpCard, Card playerCard)
         {
@@ -260,6 +261,13 @@ namespace Santase
         public bool CheckForCloseOfDeckOfCardsFromOpponent(Player participant, Card openTrumpCard)
         {
             int pointsOfTheCards = participant.CardsPlayer.Sum(a => a.Points);
+            //if (pointsOfTheCards + participant.Points >= 25
+            //    && participant.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 2
+            //    && participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type
+            //    && (c.Value == "A" || c.Value == "10")))
+            //{
+            //    return true;
+            //}
             if (pointsOfTheCards + participant.Points >= 40
                 && participant.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 3
                 && participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type 

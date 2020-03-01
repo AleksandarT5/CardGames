@@ -19,6 +19,8 @@ namespace Santase
                 if (opponent.Games != 0 || player.Games != 0)
                 {
                     deckOfCards.ReturnTheCardsToTheDeck(player, opponent);
+                    //Console.Write($"Cards: {string.Join(", ", deckOfCards.GameCards)}");
+                    //Console.WriteLine();
                 }
                 // Раздаване
                 Board board = new Board(1);
@@ -28,6 +30,9 @@ namespace Santase
                 Console.WriteLine();
                 Console.Write($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}");
                 Console.WriteLine();
+                Console.Write($"Cards: {string.Join(", ", deckOfCards.GameCards)}");
+                Console.WriteLine();
+                Console.WriteLine();
 
                 // Игра
                 Card openTrumpCard = deckOfCards.GetTrumpCard();
@@ -36,6 +41,7 @@ namespace Santase
 
                 while (board.Turns <= 12)
                 {
+                    Console.WriteLine();
                     Console.WriteLine($"Turn {board.Turns}:");
                     Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
                     Console.WriteLine();
@@ -45,12 +51,6 @@ namespace Santase
                     if (opponent.IsFirstPlay == true)
                     {
                         check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard, board.Turns);
-                        //if (board.Turns >= 2 && board.Turns <= 5)
-                        //{
-                        //    opponent.CardsPlayer = check.NineTrump(opponent.CardsPlayer, openTrumpCard);
-                        //    Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
-                        //    Console.WriteLine($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}");
-                        //}
 
                         OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
                             new OpponentStrategyWhenGameFirst(board.Turns);
@@ -74,12 +74,6 @@ namespace Santase
                     else
                     {
                         check.CheckPayerHaveNineTrump(player.CardsPlayer, openTrumpCard, board.Turns);
-                        //if (board.Turns >= 2 && board.Turns <= 5)
-                        //{
-                        //    player.CardsPlayer = check.NineTrump(player.CardsPlayer, openTrumpCard);
-                        //    Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
-                        //    Console.WriteLine($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
-                        //}
 
                         PlayerStrategyWhenGameFirst playerStrategyWhenGameFirst =
                                 new PlayerStrategyWhenGameFirst(board.Turns);
@@ -101,13 +95,6 @@ namespace Santase
                         Console.WriteLine($"{opponent.Name} playing: {cardOnOpponentForThisTurn.ToString()}");
                     }
 
-
-                    if ((board.Turns >= 2 && board.Turns <= 5) && openTrumpCard.Value != "9" && (opponent
-                        .CardsPlayer.Contains(openTrumpCard) || player.CardsPlayer.Contains(openTrumpCard)))
-                    {
-                        openTrumpCard.Value = "9";
-                    }
-
                     check.CheckWinnerTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
                             openTrumpCard, deckOfCards);
                     
@@ -125,31 +112,17 @@ namespace Santase
                         deckOfCards.TakeCards(opponent, player, openTrumpCard);
                     }
 
-                    //if (opponent.IsFirstPlay == true 
-                    //    && check.CheckForCloseOfDeckOfCardsFromOpponent(opponent, openTrumpCard) == true)
-                    //{
-                    //    opponent.HasClosedTheDeckOfCards = true;
-                    //    board.Turns = 6;
-                    //}
-                    board.Turns = check.CheckForCloseDeckOfCards(opponent, player, openTrumpCard, board.Turns);
-                    //if ((board.Turns >= 1 && board.Turns <= 4) && player.IsFirstPlay == true)
-                    //{
-                    //    Console.Write($"Will the {player.Name} close Deck of Cards(for \"Yes\", write \"Y\"):");
-                    //    string answer = Console.ReadLine();
-                    //    if (answer == "Y")
-                    //    {
-                    //        player.HasClosedTheDeckOfCards = true;
-                    //        board.Turns = 6;
-                    //    }
-                    //}
-
                     Console.WriteLine($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
                     Console.WriteLine($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}");
+
+                    board.Turns = check.CheckForCloseDeckOfCards(opponent, player, openTrumpCard, board.Turns);
 
                     board.Turns++;
                 }
 
                 check.CheckAfter12Tour(player, opponent);
+                deckOfCards.GameCards.Add(openTrumpCard);
+                //deckOfCards.ReturnTheCardsToTheDeck(player, opponent);
             }
 
             Console.WriteLine($"{opponent.Name} : {player.Name} - {opponent.Games} : {player.Games}");

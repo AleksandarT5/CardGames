@@ -13,7 +13,7 @@ namespace Santase
             //
             if (playerCard.Type != openTrumpCard.Type)
             {
-                if ((playerCard.Value != "10" || playerCard.Value != "A") 
+                if ((playerCard.Value != "10" && playerCard.Value != "A") 
                     && opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
                     .OrderBy(c => c.Points).Last().Points < playerCard.Points)
                 {

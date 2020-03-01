@@ -60,6 +60,7 @@ namespace Santase
                 count += 1;
                 OneHandingOutCards(participant, secondParticipant, count);
             }
+
             participant.CardsPlayer = participant.CardsPlayer.OrderBy(t => t.Type)
                 .ThenByDescending(v => v.Value).ToList();
             secondParticipant.CardsPlayer = secondParticipant.CardsPlayer.OrderBy(t => t.Type)
@@ -119,13 +120,23 @@ namespace Santase
         
         public void ReturnTheCardsToTheDeck(Player player, Player opponent)
         {
+            Console.WriteLine($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
+            Console.WriteLine();
+            Console.WriteLine($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}");
+            Console.WriteLine();
+            Console.WriteLine($"GameCards: {string.Join(", ", this.GameCards)}");
+            Console.WriteLine();
+            Console.WriteLine($"PlayedCards: {string.Join(", ", this.PlayedCards)}");
+            Console.WriteLine();
+
             this.GameCards = this.GameCards.Concat(this.PlayedCards).Concat(player.CardsPlayer)
                 .Concat(opponent.CardsPlayer).ToList();
-            this.GameCards.Add(this.OpenTrumpCard);
             FillDeck(this.GameCards);
             this.PlayedCards.Clear();
             player.CardsPlayer.Clear();
             opponent.CardsPlayer.Clear();
+            Console.WriteLine($"GameCards: {string.Join(", ", this.GameCards)}");
+
         }
     }
 }
