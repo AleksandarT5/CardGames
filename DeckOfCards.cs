@@ -10,7 +10,8 @@ namespace Santase
         private string[] valuesCards = { "9", "J", "D", "K", "10", "A" };
 
         public List<Card> GameCards { get; set; } = new List<Card>();
-        public Card OpenTrumpCard { get; set; }
+
+        //public Card OpenTrumpCard { get; set; }
 
         public List<Card> PlayedCards { get; set; } = new List<Card>();
 
@@ -120,10 +121,6 @@ namespace Santase
         
         public void ReturnTheCardsToTheDeck(Player player, Player opponent)
         {
-            Console.WriteLine($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
-            Console.WriteLine();
-            Console.WriteLine($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}");
-            Console.WriteLine();
             Console.WriteLine($"GameCards: {string.Join(", ", this.GameCards)}");
             Console.WriteLine();
             Console.WriteLine($"PlayedCards: {string.Join(", ", this.PlayedCards)}");
@@ -131,7 +128,10 @@ namespace Santase
 
             this.GameCards = this.GameCards.Concat(this.PlayedCards).Concat(player.CardsPlayer)
                 .Concat(opponent.CardsPlayer).ToList();
+            Console.WriteLine($"GameCards: {string.Join(", ", this.GameCards)}");
             FillDeck(this.GameCards);
+            Console.WriteLine();
+            Console.WriteLine(this.GameCards.Count());
             this.PlayedCards.Clear();
             player.CardsPlayer.Clear();
             opponent.CardsPlayer.Clear();

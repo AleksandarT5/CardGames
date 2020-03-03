@@ -6,18 +6,7 @@ using System.Text;
 namespace Santase
 {
     internal class Check : ICheck
-    {
-        public void CheckPayerHaveNineTrump(List<Card> participantCards, Card openTrumpCard, int turns)
-        {
-            if (turns >= 2 && turns <= 5)
-            {
-                participantCards = NineTrump(participantCards, openTrumpCard);
-                if (participantCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == openTrumpCard.Value))
-                {
-                    openTrumpCard.Value = "9";
-                }
-            }
-        }
+    {        
         public int CheckForCloseDeckOfCards(Player opponent, Player player, Card openTrumpCard, int turns)
         {
             if (turns >= 1 && turns <= 4)
@@ -45,28 +34,39 @@ namespace Santase
 
             return turns;
         }
-        // Не прави исканата промяна - не сменя openTrumpCard
-        public List<Card> CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
+
+        public bool CheckForCloseOfDeckOfCardsFromOpponent(Player participant, Card openTrumpCard)
         {
-            if (playerCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "9"))
+            int pointsOfTheCards = participant.CardsPlayer.Sum(a => a.Points);
+            if (pointsOfTheCards + participant.Points >= 40
+                && participant.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 3
+                && participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type
+                && (c.Value == "A" || c.Value == "10")))
             {
-                playerCards.Add(openTrumpCard);
-                Card changedCard = playerCards.Where(c => c.Type == openTrumpCard.Type
-                && c.Value == "9").First();
-                playerCards.Remove(changedCard);
+                return true;
             }
 
-            return playerCards;
+            return false;
         }
 
-        public List<Card> NineTrump(List<Card> playerCards, Card openTrumpCard)
+        public void CheckParticianHaveNineTrump(List<Card> participantCards, Card openTrumpCard, int turns)
         {
-            // Не сменя картата в крайния списък с карти
+            if (turns >= 2 && turns <= 5)
+            {
+                participantCards = CheckPlayerHaveNineTrump(participantCards, openTrumpCard);
+                if (participantCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == openTrumpCard.Value))
+                {
+                    openTrumpCard.Value = "9";
+                }
+            }
+        }
+
+        public List<Card> CheckPlayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard)
+        {
             if (playerCards.Exists(c => c.Type == openTrumpCard.Type && c.Value == "9"))
             {
                 string openTrumpCardValue = openTrumpCard.Value;
                 playerCards.Add(new Card(openTrumpCard.Type, openTrumpCardValue, openTrumpCard.Points));
-                //playerCards.Add(openTrumpCard);
                 Card wantedCard = playerCards.Where(c => c.Type == openTrumpCard.Type && c.Value == "9").First();
                 playerCards.Remove(wantedCard);
                 return playerCards;
@@ -74,17 +74,7 @@ namespace Santase
 
             return playerCards;
         }
-
-        //public Card CheckOpenTrupmCardIsChanged(Card openTrumpCard, bool changedOpenTrumpCard)
-        //{
-        //    if (changedOpenTrumpCard == true)
-        //    {
-        //        openTrumpCard = new Card(openTrumpCard.Type, "9");
-        //    }
-
-        //    return openTrumpCard;
-        //}
-
+        
         public int CheckFor40and20(Player player, Card openTrumpCard, Card playerCard)
         {
             Card card = CheckForExtraPoints(player, playerCard);
@@ -162,7 +152,7 @@ namespace Santase
         {
             List<Card> opponentCardsFromType = opponent.CardsPlayer.Where(c => c.Type == type).ToList();
             List<Card> playedCardsFromType = deckOfCardsPlayedCards.Where(c => c.Type == type).ToList();
-            List<Card> noPlayedCardsFromType = CreateAllCardsFromType(type, playedCardsFromType);
+            List<Card> noPlayedCardsFromType = AllCardsFromTypeInTheGame(type, playedCardsFromType);
 
             if (opponentCardsFromType.Count > 0)
             {
@@ -173,16 +163,16 @@ namespace Santase
             return null;
         }
 
-        private List<Card> CreateAllCardsFromType(string type, List<Card> playedTrumpCards)
+        private List<Card> AllCardsFromTypeInTheGame(string type, List<Card> playedTrumpCards)
         {
-            List<Card> allCardsFromType = new List<Card>();
+            List<Card> allCardsFromTypeInTheGame = new List<Card>();
             string[] values = new string[] { "9", "J", "D", "K", "10", "A" };
             for (int i = 0; i < 6; i++)
             {
-                allCardsFromType.Add(new Card(type, values[i]));
+                allCardsFromTypeInTheGame.Add(new Card(type, values[i], 0));
             }
 
-            return allCardsFromType.Except(playedTrumpCards).ToList();
+            return allCardsFromTypeInTheGame.Except(playedTrumpCards).ToList();
         }
 
         internal Card CheckForWeakTrump(List<Card> opponentCards, Card openTrumpCard)
@@ -256,28 +246,7 @@ namespace Santase
             }
 
             return cardPlayer;
-        }
-
-        public bool CheckForCloseOfDeckOfCardsFromOpponent(Player participant, Card openTrumpCard)
-        {
-            int pointsOfTheCards = participant.CardsPlayer.Sum(a => a.Points);
-            //if (pointsOfTheCards + participant.Points >= 25
-            //    && participant.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 2
-            //    && participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type
-            //    && (c.Value == "A" || c.Value == "10")))
-            //{
-            //    return true;
-            //}
-            if (pointsOfTheCards + participant.Points >= 40
-                && participant.CardsPlayer.Count(a => a.Type == openTrumpCard.Type) >= 3
-                && participant.CardsPlayer.Exists(c => c.Type == openTrumpCard.Type 
-                && (c.Value == "A" || c.Value == "10")))
-            {
-                return true;
-            }
-
-            return false;
-        }
+        }        
 
         public void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card playerCard,
             Card openTrumpCard, DeckOfCards deckOfCards)
@@ -373,7 +342,7 @@ namespace Santase
             }
         }
 
-        public void CheckAfter12Tour(Player player, Player opponent)
+        public void CalculationsAfter12Tour(Player player, Player opponent)
         {
             if (player.HasClosedTheDeckOfCards == true)
             {

@@ -6,7 +6,7 @@ namespace Santase
 {
     interface ICheck
     {
-        List<Card> CheckPayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard);
+        List<Card> CheckPlayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard);
         
         Card CheckingForTwenty(Player player, Card openTrumpCard);
 
@@ -32,6 +32,6 @@ namespace Santase
 
         void CheckFor66(Player opponent, Player player);
 
-        void CheckAfter12Tour(Player player, Player opponent);
+        void CalculationsAfter12Tour(Player player, Player opponent);
     }
 }

@@ -6,7 +6,7 @@ namespace Santase
 {
     interface IDeckOfCards
     {
-        Card OpenTrumpCard { get; set; }
+        //Card OpenTrumpCard { get; set; }
 
         List<Card> FillDeckOfCards(List<Card> cards, string[] valuesCards);
 

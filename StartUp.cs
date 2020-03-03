@@ -7,7 +7,7 @@ namespace Santase
     class StartUp
     {
         static void Main(string[] args)
-        {           
+        {
             // Пълнене на тестето и разбъркване на картите
             DeckOfCards deckOfCards = new DeckOfCards();
 
@@ -19,8 +19,6 @@ namespace Santase
                 if (opponent.Games != 0 || player.Games != 0)
                 {
                     deckOfCards.ReturnTheCardsToTheDeck(player, opponent);
-                    //Console.Write($"Cards: {string.Join(", ", deckOfCards.GameCards)}");
-                    //Console.WriteLine();
                 }
                 // Раздаване
                 Board board = new Board(1);
@@ -31,7 +29,6 @@ namespace Santase
                 Console.Write($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}");
                 Console.WriteLine();
                 Console.Write($"Cards: {string.Join(", ", deckOfCards.GameCards)}");
-                Console.WriteLine();
                 Console.WriteLine();
 
                 // Игра
@@ -50,7 +47,7 @@ namespace Santase
 
                     if (opponent.IsFirstPlay == true)
                     {
-                        check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard, board.Turns);
+                        check.CheckParticianHaveNineTrump(opponent.CardsPlayer, openTrumpCard, board.Turns);
 
                         OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
                             new OpponentStrategyWhenGameFirst(board.Turns);
@@ -73,7 +70,7 @@ namespace Santase
 
                     else
                     {
-                        check.CheckPayerHaveNineTrump(player.CardsPlayer, openTrumpCard, board.Turns);
+                        check.CheckParticianHaveNineTrump(player.CardsPlayer, openTrumpCard, board.Turns);
 
                         PlayerStrategyWhenGameFirst playerStrategyWhenGameFirst =
                                 new PlayerStrategyWhenGameFirst(board.Turns);
@@ -120,8 +117,14 @@ namespace Santase
                     board.Turns++;
                 }
 
-                check.CheckAfter12Tour(player, opponent);
-                deckOfCards.GameCards.Add(openTrumpCard);
+                check.CalculationsAfter12Tour(player, opponent);
+                // openTrumpCard в DeckOfCards ???
+                if (deckOfCards.GameCards.Count > 0)
+                {
+                    deckOfCards.GameCards.Add(openTrumpCard);
+                    openTrumpCard = null;
+                }
+
                 //deckOfCards.ReturnTheCardsToTheDeck(player, opponent);
             }
 

@@ -10,11 +10,6 @@ namespace Santase
             Check check, DeckOfCards deckOfCards)
         {
             Card card = null;
-            // Проверка за коз +            
-            // Проверка за силна не Коз
-            // Проверка за слаба не Коз - CheckForCard +
-
-
             card = check.CheckingForForty(opponent, openTrumpCard);
             if (card != null)
             {
