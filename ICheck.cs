@@ -6,29 +6,29 @@ namespace Santase
 {
     interface ICheck
     {
-        List<Card> CheckPlayerHaveNineTrump(List<Card> playerCards, Card openTrumpCard);
+        List<Card> CheckingIfTheParticipantHasNineTrump(List<Card> playerCards, Card openTrumpCard);
         
         Card CheckingForTwenty(Player player, Card openTrumpCard);
 
         Card CheckingForForty(Player player, Card openTrumpCard);
 
-        int CheckFor40and20(Player player, Card openTrumpCard, Card playerCard);
+        //int CheckingFor40and20(Player player, Card openTrumpCard, Card playerCard);
 
-        void CalculationsWhenParticipantHaveSixtySix(Player player, Player theOtherParticipant);
+        void CalculationsWhenParticipantHaveSixtySix(Player participant, Player theOtherParticipant);
 
-        bool CheckForCloseOfDeckOfCardsFromOpponent(Player player, Card openTrumpCard);
+        bool CheckingForCloseOfDeckOfCardsFromOpponent(Player player, Card openTrumpCard);
 
-        Card CheckForWeakCard(List<Card> opponentCards, Card openTrumpCard);
+        Card CheckingForWeakCard(List<Card> opponentCards, Card openTrumpCard);
 
-        Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, string[] values, int number);
+        Card CheckingCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, string[] values, int number);
 
-        void CheckWinnerTurn(Player opponent, Player player, Card opponentCard, Card myCard, 
+        void CheckingWhoIsTheWinnerInTheTurn(Player opponent, Player player, Card opponentCard, Card myCard, 
             Card openTrumpCard, DeckOfCards deckOfCards);
 
-        Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent, List<Card> cardsPlayer,
-            Card openTrumpCard);
+        //Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent, List<Card> cardsPlayer,
+        //    Card openTrumpCard);
 
-        Card DeterminingThePlayerCard(List<Card> cardsPlayer);
+        //Card DeterminingThePlayerCard(List<Card> cardsPlayer);
 
         void CheckFor66(Player opponent, Player player);
 

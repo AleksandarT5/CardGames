@@ -121,22 +121,12 @@ namespace Santase
         
         public void ReturnTheCardsToTheDeck(Player player, Player opponent)
         {
-            Console.WriteLine($"GameCards: {string.Join(", ", this.GameCards)}");
-            Console.WriteLine();
-            Console.WriteLine($"PlayedCards: {string.Join(", ", this.PlayedCards)}");
-            Console.WriteLine();
-
             this.GameCards = this.GameCards.Concat(this.PlayedCards).Concat(player.CardsPlayer)
                 .Concat(opponent.CardsPlayer).ToList();
-            Console.WriteLine($"GameCards: {string.Join(", ", this.GameCards)}");
             FillDeck(this.GameCards);
-            Console.WriteLine();
-            Console.WriteLine(this.GameCards.Count());
             this.PlayedCards.Clear();
             player.CardsPlayer.Clear();
             opponent.CardsPlayer.Clear();
-            Console.WriteLine($"GameCards: {string.Join(", ", this.GameCards)}");
-
         }
     }
 }

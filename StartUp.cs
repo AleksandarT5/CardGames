@@ -10,8 +10,9 @@ namespace Santase
         {
             // Пълнене на тестето и разбъркване на картите
             DeckOfCards deckOfCards = new DeckOfCards();
-
+            Console.Write("Opponent's name: ");
             Player opponent = new Player(Console.ReadLine(), new List<Card>(), 0, 0, true, false);
+            Console.Write("Your's name: ");
             Player player = new Player(Console.ReadLine(), new List<Card>(), 0, 0, false, false);
 
             while (opponent.Games < 11 && player.Games < 11)
@@ -24,11 +25,11 @@ namespace Santase
                 Board board = new Board(1);
 
                 board.HandingOutCards(deckOfCards.OneHandingOutCards, opponent, player, 1);
-                Console.Write($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
+                Console.Write($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}  ");
                 Console.WriteLine();
-                Console.Write($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}");
+                Console.Write($"{opponent.Name} cards: {string.Join(", ", opponent.CardsPlayer)}  ");
                 Console.WriteLine();
-                Console.Write($"Cards: {string.Join(", ", deckOfCards.GameCards)}");
+                Console.Write($"Cards: {string.Join(", ", deckOfCards.GameCards)}  ");
                 Console.WriteLine();
 
                 // Игра
@@ -40,14 +41,14 @@ namespace Santase
                 {
                     Console.WriteLine();
                     Console.WriteLine($"Turn {board.Turns}:");
-                    Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()}");
+                    Console.WriteLine($"OpenTrumpCard: {openTrumpCard.ToString()} - {openTrumpCard.Points}");
                     Console.WriteLine();
                     Card cardOnOpponentForThisTurn = null;
                     Card cardOnPlayerForThisTurn = null;                    
 
                     if (opponent.IsFirstPlay == true)
                     {
-                        check.CheckParticianHaveNineTrump(opponent.CardsPlayer, openTrumpCard, board.Turns);
+                        check.CheckParticianHaveNineTrumpAndSwap(opponent.CardsPlayer, openTrumpCard, board.Turns);
 
                         OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
                             new OpponentStrategyWhenGameFirst(board.Turns);
@@ -70,7 +71,7 @@ namespace Santase
 
                     else
                     {
-                        check.CheckParticianHaveNineTrump(player.CardsPlayer, openTrumpCard, board.Turns);
+                        check.CheckParticianHaveNineTrumpAndSwap(player.CardsPlayer, openTrumpCard, board.Turns);
 
                         PlayerStrategyWhenGameFirst playerStrategyWhenGameFirst =
                                 new PlayerStrategyWhenGameFirst(board.Turns);
@@ -92,7 +93,7 @@ namespace Santase
                         Console.WriteLine($"{opponent.Name} playing: {cardOnOpponentForThisTurn.ToString()}");
                     }
 
-                    check.CheckWinnerTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
+                    check.CheckingWhoIsTheWinnerInTheTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
                             openTrumpCard, deckOfCards);
                     
                     Console.WriteLine($"{player.Name}: {player.Points}");

@@ -18,7 +18,7 @@ namespace Santase
                     && opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
                     .OrderBy(c => c.Points).Last().Points < playerCard.Points)
                 {
-                    return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+                    return check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
                 }
             }
             //
@@ -37,7 +37,7 @@ namespace Santase
                 return check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
             }
 
-            return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);            
+            return check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);            
         }
 
         private bool AnswerWithStrongestTrump(List<Card> cards, Card playerCard, Card openTrumpCard)

@@ -34,7 +34,7 @@ namespace Santase
                 return card;
             }
             // Проверка за некоз, най-слабата
-            card = check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            card = check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
             if (card != null)
             {
                 return card;

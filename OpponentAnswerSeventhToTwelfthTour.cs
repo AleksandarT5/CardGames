@@ -25,7 +25,7 @@ namespace Santase
                 return check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
             }
 
-            return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            return check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
 
         }
     }

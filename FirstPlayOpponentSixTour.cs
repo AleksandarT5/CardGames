@@ -22,7 +22,7 @@ namespace Santase
                 return card;
             }
 
-            card = check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            card = check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
             return card;
         }
     }
