@@ -10,9 +10,14 @@ namespace Santase
         public override Card AnswerOnOpponent(Player opponent, Player player, Card playerCard, 
             Card openTrumpCard, Check check)
         {
-            //
+            
             if (playerCard.Type != openTrumpCard.Type)
             {
+                if (AnswerWithWeakTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
+                {
+                    return check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
+                }
+
                 if ((playerCard.Value != "10" && playerCard.Value != "A")
                     && opponent.CardsPlayer.Count(c => c.Type == playerCard.Type) > 0
                     && opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
@@ -21,22 +26,13 @@ namespace Santase
                     return check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
                 }
             }
-            //
+            
             if (AnswerWithStrongestTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
-                //playerCard.Type != openTrumpCard.Type && cards.Count(c => c.Type == playerCard.Type) > 0
-                //&& cards.Max(c => c.Points) > playerCard.Points;
             {
                 return opponent.CardsPlayer.Where(c => c.Type == playerCard.Type)
                     .OrderByDescending(c => c.Points).First();
             }
-
-            else if (AnswerWithWeakTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
-                //((playerCard.Type != openTrumpCard.Type && (playerCard.Value == "A"
-                //|| playerCard.Value == "10"))) && (cards.Count(c => c.Type == openTrumpCard.Type) > 0);
-            {
-                return check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
-            }
-
+            
             return check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);            
         }
 
@@ -49,8 +45,12 @@ namespace Santase
 
         private bool AnswerWithWeakTrump(List<Card> cards, Card playerCard, Card openTrumpCard)
         {
-            return ((playerCard.Type != openTrumpCard.Type && (playerCard.Value == "A"
-                || playerCard.Value == "10"))) && (cards.Count(c => c.Type == openTrumpCard.Type) > 0);
+            return (playerCard.Value == "10" || playerCard.Value == "A")
+                    && ((cards.Count(c => c.Type == playerCard.Type) > 0
+                    && cards.Where(c => c.Type == playerCard.Type)
+                    .OrderByDescending(c => c.Points).First().Points < playerCard.Points)
+                    || cards.Count(c => c.Type == playerCard.Type) == 0)
+                    && cards.Count(c => c.Type == openTrumpCard.Type) > 0;
         }
     }
 }
