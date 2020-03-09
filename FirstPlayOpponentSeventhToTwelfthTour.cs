@@ -10,13 +10,13 @@ namespace Santase
             Check check, DeckOfCards deckOfCards)
         {
             Card card = null;
-            card = check.CheckingForForty(opponent, openTrumpCard);
+            card = check.CheckForForty(opponent, openTrumpCard);
             if (card != null)
             {
                 return card;
             }
 
-            card = check.CheckingForTwenty(opponent, openTrumpCard);
+            card = check.CheckForTwenty(opponent, openTrumpCard);
             if (card != null)
             {
                 return card;
@@ -34,7 +34,7 @@ namespace Santase
                 return card;
             }
             // Проверка за некоз, най-слабата
-            card = check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            card = check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
             if (card != null)
             {
                 return card;

@@ -8,21 +8,21 @@ namespace Santase
     {
         //List<Card> CheckingIfTheParticipantHasNineTrump(List<Card> playerCards, Card openTrumpCard);
 
-        Card CheckingForTwenty(Player player, Card openTrumpCard);
+        Card CheckForTwenty(Player player, Card openTrumpCard);
 
-        Card CheckingForForty(Player player, Card openTrumpCard);
+        Card CheckForForty(Player player, Card openTrumpCard);
 
-        int CheckingFor40and20(Player player, Card openTrumpCard, Card playerCard);
+        int CheckFor40and20(Player player, Card openTrumpCard, Card playerCard);
 
         void CalculationsWhenParticipantHaveSixtySix(Player participant, Player theOtherParticipant);
 
-        bool CheckingForCloseOfDeckOfCardsFromOpponent(Player player, Card openTrumpCard);
+        bool CheckForClosingDeckOfCardsByTheOpponent(Player player, Card openTrumpCard);
 
-        Card CheckingForWeakCard(List<Card> opponentCards, Card openTrumpCard);
+        Card CheckForWeakCard(List<Card> opponentCards, Card openTrumpCard);
 
-        Card CheckingCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, string[] values, int number);
+        Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, string[] values, int number);
 
-        void CheckingWhoIsTheWinnerInTheTurn(Player opponent, Player player, Card opponentCard, Card myCard,
+        void CheckWhoIsTheWinnerInTheTurn(Player opponent, Player player, Card opponentCard, Card myCard,
             Card openTrumpCard, DeckOfCards deckOfCards);
 
         Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent, List<Card> cardsPlayer,
@@ -34,6 +34,6 @@ namespace Santase
 
         void CalculationsAfter12Tour(Player player, Player opponent, Card openTrumpCard, DeckOfCards deckOfCards);
 
-        string PrintFinalResult(Player winner, Player loser);
+        string PrintFinalResult(Player winner, Player loser, Player player);
     }
 }

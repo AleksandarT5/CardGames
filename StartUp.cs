@@ -19,12 +19,9 @@ namespace Santase
 
             while (opponent.Games < 11 && player.Games < 11)
             {
-                //if (opponent.Games != 0 || player.Games != 0)
-                //{
-                //    deckOfCards.ReturnTheCardsToTheDeck(player, opponent);
-                //}
-                // Раздаване
+                Console.WriteLine($"New Game\n{new string('*', 30)}");
                 Board board = new Board(1);
+                // Раздаване
 
                 board.HandingOutCards(deckOfCards.OneHandingOutCards, opponent, player, 1);
                 Console.Write($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
@@ -32,7 +29,6 @@ namespace Santase
 
                 // Игра
                 Card openTrumpCard = deckOfCards.GetTrumpCard();
-                
                 while (board.Turns <= 12)
                 {
                     Console.WriteLine($"Turn {board.Turns}:");
@@ -88,7 +84,7 @@ namespace Santase
                         Console.WriteLine($"{opponent.Name} playing: {cardOnOpponentForThisTurn.ToString()}");
                     }
 
-                    check.CheckingWhoIsTheWinnerInTheTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
+                    check.CheckWhoIsTheWinnerInTheTurn(opponent, player, cardOnOpponentForThisTurn, cardOnPlayerForThisTurn,
                             openTrumpCard, deckOfCards);
                     
                     Console.WriteLine($"{player.Name}: {player.Points}");
@@ -110,7 +106,7 @@ namespace Santase
                     Console.WriteLine($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
                     Console.WriteLine();
 
-                    board.Turns = check.CheckForCloseDeckOfCards(opponent, player, openTrumpCard, board.Turns);
+                    board.Turns = check.CheckForClosingDeckOfCards(opponent, player, openTrumpCard, board.Turns);
 
                     board.Turns++;
                 }
@@ -120,8 +116,8 @@ namespace Santase
                 
             }
 
-            Console.WriteLine(player.Games >= 11 ? check.PrintFinalResult(player, opponent) 
-                : check.PrintFinalResult(opponent, player));
+            Console.WriteLine(player.Games >= 11 ? check.PrintFinalResult(player, opponent, player) 
+                : check.PrintFinalResult(opponent, player, player));
         }
     }
 }

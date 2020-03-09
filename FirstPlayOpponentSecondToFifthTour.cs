@@ -11,19 +11,19 @@ namespace Santase
         {
             Card card = null;
             //openTrumpCard = check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard);
-            card = check.CheckingForForty(opponent, openTrumpCard);
+            card = check.CheckForForty(opponent, openTrumpCard);
             if (card != null)
             {
                 return card;
             }
 
-            card = check.CheckingForTwenty(opponent, openTrumpCard);
+            card = check.CheckForTwenty(opponent, openTrumpCard);
             if (card != null)
             {
                 return card;
             }
 
-            card = check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            card = check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
             return card;
         }
     }

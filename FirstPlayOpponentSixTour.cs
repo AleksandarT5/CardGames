@@ -10,19 +10,19 @@ namespace Santase
             Check check, DeckOfCards deckOfCards)
         {
             Card card = null;
-            card = check.CheckingForForty(opponent, openTrumpCard);
+            card = check.CheckForForty(opponent, openTrumpCard);
             if (opponent.Points >= 66 || card != null)
             {
                 return card;
             }
 
-            card = check.CheckingForForty(opponent, openTrumpCard);
+            card = check.CheckForForty(opponent, openTrumpCard);
             if (opponent.Points >= 66 || card != null)
             {
                 return card;
             }
 
-            card = check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            card = check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
             return card;
         }
     }

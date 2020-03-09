@@ -9,7 +9,7 @@ namespace Santase
         public override Card OpponentPlayFirst(Player opponent, Player player, Card openTrumpCard,
             Check check, DeckOfCards deckOfCards)
         {
-            Card opponentCardForPlay = check.CheckingForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            Card opponentCardForPlay = check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
             return opponentCardForPlay;
         }
     }
