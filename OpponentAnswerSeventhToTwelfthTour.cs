@@ -18,14 +18,15 @@ namespace Santase
                     sameTypeOfCardsAsPlayerCard.OrderByDescending(c => c.Points).First() :
                     sameTypeOfCardsAsPlayerCard.OrderBy(c => c.Points).First();
             }
+
             else if (playerCard.Type != openTrumpCard.Type 
                 && opponent.CardsPlayer.Count(c => c.Type == playerCard.Type) == 0
                 && opponent.CardsPlayer.Count(c => c.Type == openTrumpCard.Type) > 0)
             {
-                return check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
+                return check.CheckForTheWeakestTrump(opponent.CardsPlayer, openTrumpCard);
             }
 
-            return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            return check.CheckForTheWeakestCard(opponent.CardsPlayer, openTrumpCard);
 
         }
     }

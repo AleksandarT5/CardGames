@@ -10,7 +10,6 @@ namespace Santase
             Check check, DeckOfCards deckOfCards)
         {
             Card card = null;
-            //openTrumpCard = check.CheckPayerHaveNineTrump(opponent.CardsPlayer, openTrumpCard);
             card = check.CheckForForty(opponent, openTrumpCard);
             if (card != null)
             {
@@ -23,7 +22,7 @@ namespace Santase
                 return card;
             }
 
-            card = check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            card = check.CheckForTheWeakestCard(opponent.CardsPlayer, openTrumpCard);
             return card;
         }
     }

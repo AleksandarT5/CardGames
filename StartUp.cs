@@ -7,7 +7,7 @@ namespace Santase
     class StartUp
     {
         static void Main(string[] args)
-        {
+        {            
             // Пълнене на тестето и разбъркване на картите
             DeckOfCards deckOfCards = new DeckOfCards();
             Console.Write("Opponent's name: ");
@@ -39,7 +39,7 @@ namespace Santase
 
                     if (opponent.IsFirstPlay == true)
                     {
-                        check.CheckParticianHaveNineTrumpAndSwap(opponent.CardsPlayer, openTrumpCard, board.Turns);
+                        check.CheckParticipantHasNineTrumpAndSwap(opponent.CardsPlayer, openTrumpCard, board.Turns);
                         
                         OpponentStrategyWhenGameFirst opponentStrategyWhenGameFirst =
                             new OpponentStrategyWhenGameFirst(board.Turns);
@@ -49,20 +49,20 @@ namespace Santase
 
                         if (opponent.Points >= 66)
                         {
-                            check.CalculationsWhenParticipantHaveSixtySix(opponent, player);
+                            check.CalculationsWhenParticipantHasSixtySix(opponent, player);
                             break;
                         }
 
                         Console.WriteLine($"The {opponent.Name} playing: {cardOnOpponentForThisTurn.ToString()}");
                         cardOnPlayerForThisTurn = board.Turns > 6 ?
-                            check.CardPlayedAnswerByPlayerNoDeckOfCards(cardOnOpponentForThisTurn, player.CardsPlayer, openTrumpCard) :
-                            check.DeterminingThePlayerCard(player.CardsPlayer);
+                            check.PlayerAnswersWhenDeckOfCardsIsOver(cardOnOpponentForThisTurn, player.CardsPlayer, openTrumpCard) :
+                            check.DeterminingTheCardOfThePlayer(player.CardsPlayer);
                         Console.WriteLine($"{player.Name} playing: {cardOnPlayerForThisTurn.ToString()}");                        
                     }
 
                     else
                     {
-                        check.CheckParticianHaveNineTrumpAndSwap(player.CardsPlayer, openTrumpCard, board.Turns);
+                        check.CheckParticipantHasNineTrumpAndSwap(player.CardsPlayer, openTrumpCard, board.Turns);
 
                         PlayerStrategyWhenGameFirst playerStrategyWhenGameFirst =
                                 new PlayerStrategyWhenGameFirst(board.Turns);
@@ -71,7 +71,7 @@ namespace Santase
 
                         if (player.Points >= 66)
                         {
-                            check.CalculationsWhenParticipantHaveSixtySix(player, opponent);
+                            check.CalculationsWhenParticipantHasSixtySix(player, opponent);
                             break;
                         }
 
@@ -90,7 +90,6 @@ namespace Santase
                     Console.WriteLine($"{player.Name}: {player.Points}");
                     Console.WriteLine($"{opponent.Name}: {opponent.Points}");
                     Console.WriteLine(new string('-', 30));
-                    //Console.WriteLine();
                     
                     if (opponent.Points >= 66 || player.Points >= 66)
                     {
@@ -98,22 +97,11 @@ namespace Santase
                         break;
                     }
 
-                    if (board.Turns < 7)
-                    {
-                        deckOfCards.TakeCards(opponent, player, openTrumpCard);
-                    }
-
-                    Console.WriteLine($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
-                    Console.WriteLine();
-
-                    board.Turns = check.CheckForClosingDeckOfCards(opponent, player, openTrumpCard, board.Turns);
-
-                    board.Turns++;
+                    check.CheckAfterTheTurnIsOver(opponent, player, openTrumpCard, deckOfCards, board);
                 }
 
                 check.CalculationsAfter12Tour(player, opponent, openTrumpCard, deckOfCards);
-                // openTrumpCard в DeckOfCards ???
-                
+                // openTrumpCard в DeckOfCards ???                
             }
 
             Console.WriteLine(player.Games >= 11 ? check.PrintFinalResult(player, opponent, player) 

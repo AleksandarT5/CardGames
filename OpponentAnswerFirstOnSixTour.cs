@@ -15,12 +15,12 @@ namespace Santase
             {
                 if (AnswerWithWeakTrump(opponent.CardsPlayer, playerCard, openTrumpCard) == true)
                 {
-                    return check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
+                    return check.CheckForTheWeakestTrump(opponent.CardsPlayer, openTrumpCard);
                 }
 
                 if (AnswerWithWeakNoTrumpCard(opponent.CardsPlayer, playerCard) == true)
                 {
-                    return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+                    return check.CheckForTheWeakestCard(opponent.CardsPlayer, openTrumpCard);
                 }
             }
             
@@ -30,7 +30,7 @@ namespace Santase
                     .OrderByDescending(c => c.Points).First();
             }
             
-            return check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);            
+            return check.CheckForTheWeakestCard(opponent.CardsPlayer, openTrumpCard);            
         }
 
         private bool AnswerWithWeakNoTrumpCard(List<Card> cards, Card playerCard)

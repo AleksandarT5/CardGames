@@ -21,26 +21,23 @@ namespace Santase
             {
                 return card;
             }
-            // Проверка за коз, ако е най-силния останал -- за тест
-            card = check.CheckForStrongCardFromType(opponent, openTrumpCard.Type, deckOfCards.PlayedCards);
+            card = check.CheckForTheStrongestCardFromType(opponent, openTrumpCard.Type, deckOfCards.PlayedCards);
             if (card != null)
             {
                 return card;
             }
-            // Проверка за некоз, ако е най-силния останал - за тест
-            card = check.CheckForStrongNoTrumpCard(opponent, openTrumpCard, deckOfCards.PlayedCards);
+            card = check.CheckForTheStrongestNoTrumpCard(opponent, openTrumpCard, deckOfCards.PlayedCards);
             if (card != null)
             {
                 return card;
             }
-            // Проверка за некоз, най-слабата
-            card = check.CheckForWeakCard(opponent.CardsPlayer, openTrumpCard);
+            card = check.CheckForTheWeakestCard(opponent.CardsPlayer, openTrumpCard);
             if (card != null)
             {
                 return card;
             }
 
-            return check.CheckForWeakTrump(opponent.CardsPlayer, openTrumpCard);
+            return check.CheckForTheWeakestTrump(opponent.CardsPlayer, openTrumpCard);
         }
     }
 }

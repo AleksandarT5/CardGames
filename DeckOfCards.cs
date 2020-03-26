@@ -29,12 +29,12 @@ namespace Santase
 
         public List<Card> FillDeckOfCards(List<Card> cards, string[] valuesCards)
         {
-            for (int i = 0; i < valuesCards.Length; i++)
+            for (int currentTypeNumber = 0; currentTypeNumber < valuesCards.Length; currentTypeNumber++)
             {
-                cards.Add(new Card(TypeCard.Club.ToString(), valuesCards[i], 0));
-                cards.Add(new Card(TypeCard.Diamond.ToString(), valuesCards[i], 0));
-                cards.Add(new Card(TypeCard.Heart.ToString(), valuesCards[i], 0));
-                cards.Add(new Card(TypeCard.Spade.ToString(), valuesCards[i], 0));
+                cards.Add(new Card(TypeCard.Club.ToString(), valuesCards[currentTypeNumber], 0));
+                cards.Add(new Card(TypeCard.Diamond.ToString(), valuesCards[currentTypeNumber], 0));
+                cards.Add(new Card(TypeCard.Heart.ToString(), valuesCards[currentTypeNumber], 0));
+                cards.Add(new Card(TypeCard.Spade.ToString(), valuesCards[currentTypeNumber], 0));
             }
 
             return cards;
@@ -43,12 +43,12 @@ namespace Santase
         public void FillDeck(List<Card> deckOfCards)
         {
             Random random = new Random();
-            for (int i = 0; i < 24; i++)
+            for (int currentCardNumber = 0; currentCardNumber < 24; currentCardNumber++)
             {
                 int cardNumber = random.Next(0, deckOfCards.Count);
                 var newPosition = deckOfCards[cardNumber];
-                deckOfCards[cardNumber] = deckOfCards[i];
-                deckOfCards[i] = newPosition;
+                deckOfCards[cardNumber] = deckOfCards[currentCardNumber];
+                deckOfCards[currentCardNumber] = newPosition;
             }
         }
 
@@ -70,7 +70,7 @@ namespace Santase
 
         private void HandingOutCardHand(List<Card> basicDeckOfCards, Player participant)
         {
-            for (int i = 0; i < 3; i++)
+            for (int currentHanding = 0; currentHanding < 3; currentHanding++)
             {
                 Card oneCard = basicDeckOfCards[basicDeckOfCards.Count - 1];
                 participant.CardsPlayer.Add(oneCard);

@@ -12,23 +12,23 @@ namespace Santase
 
         Card CheckForForty(Player player, Card openTrumpCard);
 
-        int CheckFor40and20(Player player, Card openTrumpCard, Card playerCard);
+        int CheckFor40And20(Player player, Card openTrumpCard, Card playerCard);
 
-        void CalculationsWhenParticipantHaveSixtySix(Player participant, Player theOtherParticipant);
+        void CalculationsWhenParticipantHasSixtySix(Player participant, Player theOtherParticipant);
 
         bool CheckForClosingDeckOfCardsByTheOpponent(Player player, Card openTrumpCard);
 
-        Card CheckForWeakCard(List<Card> opponentCards, Card openTrumpCard);
+        Card CheckForTheWeakestCard(List<Card> opponentCards, Card openTrumpCard);
 
         Card CheckCards(List<Card> opponentCardsNoTrumps, Card openTrumpCard, string[] values, int number);
 
         void CheckWhoIsTheWinnerInTheTurn(Player opponent, Player player, Card opponentCard, Card myCard,
             Card openTrumpCard, DeckOfCards deckOfCards);
 
-        Card CardPlayedAnswerByPlayerNoDeckOfCards(Card cardPlayedByOpponent, List<Card> cardsPlayer,
+        Card PlayerAnswersWhenDeckOfCardsIsOver(Card cardPlayedByOpponent, List<Card> cardsPlayer,
             Card openTrumpCard);
 
-        Card DeterminingThePlayerCard(List<Card> cardsPlayer);
+        Card DeterminingTheCardOfThePlayer(List<Card> cardsPlayer);
 
         void CheckFor66(Player opponent, Player player);
 
