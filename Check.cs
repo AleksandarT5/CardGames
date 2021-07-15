@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-//using System.Text;
 
 namespace Santase
 {
@@ -401,6 +400,7 @@ namespace Santase
             Console.WriteLine($"{player.Name} cards: {string.Join(", ", player.CardsPlayer)}");
             Console.WriteLine();
 
+            ///Това трябва да се премести в началото на тура
             board.Turns = CheckForClosingDeckOfCards(opponent, player, openTrumpCard, board.Turns);
 
             board.Turns++;
