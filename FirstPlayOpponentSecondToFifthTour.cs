@@ -15,13 +15,11 @@ namespace Santase
             {
                 return card;
             }
-
             card = check.CheckForTwenty(opponent, openTrumpCard);
             if (card != null)
             {
                 return card;
             }
-
             card = check.CheckForTheWeakestCard(opponent.CardsPlayer, openTrumpCard);
             return card;
         }
